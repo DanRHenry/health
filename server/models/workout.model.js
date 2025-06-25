@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const WorkoutSchema = new mongoose.Schema({
     exerciseName: {
-        type: string,
+        type: String,
         required: true
     },
     duration: {
@@ -10,15 +10,15 @@ const WorkoutSchema = new mongoose.Schema({
         required: true
     },
     machine: {
-        type: string,
+        type: String,
         required: true
     },
     date: {
-        type: date,
+        type: String,
         required: true
     },
     userID: {
-        type: string,
+        type: String,
         required: true
     }
 })

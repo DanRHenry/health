@@ -117,6 +117,12 @@ if (
 
   body.append(createCardioEntryBtn);
 
+  const createWorkoutEntryBtn = document.createElement("button");
+  createWorkoutEntryBtn.innerText = "Create Workout Entry";
+  createWorkoutEntryBtn.addEventListener("click", createWorkoutEntry)
+
+  body.append(createWorkoutEntryBtn)
+
 
   //! Cardio CRUD functions
   async function createCardioEntry(e) {
@@ -180,7 +186,7 @@ if (
     return data;
   }
 
-  async function updateCardioEntry(updateObject, id) {
+  async function updateCardioEntry(cardioUpdateObject, id) {
     const URL = `${serverURL}/cardio/update${id}`;
 
     const res = await fetch(URL, {
@@ -189,7 +195,7 @@ if (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({"updateInfo": updateObject}),
+      body: JSON.stringify({"updateInfo": cardioUpdateObject}),
       // token: sessionStorage.token,
     });
     const data = await res.json();
@@ -209,13 +215,115 @@ if (
     console.log(data);
   }
 
-  const updateObject = JSON.stringify({
+  const cardioUpdateObject = JSON.stringify({
     exerciseName: "again changedName",
     machine: "newmachine",
     date: "062225"
   });
+  //!
 
 
+  //! Workout CRUD functions
+  async function createWorkoutEntry(e) {
+    e.preventDefault();
+
+    const workoutEntryBody = JSON.stringify({
+      exerciseName: "workoutName",
+      duration: 12,
+      machine: "machine",
+      date: "06242025",
+      userID: sessionStorage.userID,
+    });
+
+    const URL = `${serverURL}/workout/create`;
+
+    const res = await fetch(URL, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: workoutEntryBody,
+      token: sessionStorage.token,
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+  }
+
+  async function getWorkoutEntry(id) {
+    const URL = `${serverURL}/workout/findone${id}`;
+
+    const res = await fetch(URL, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      token: sessionStorage.token,
+    });
+
+    const data = await res.json();
+    console.log(data);
+    return data;
+  }
+
+  async function getWorkoutEntriesByUserAndDate(userID, date) {
+    const URL = `${serverURL}/workout/find${userID}/${date}`;
+
+    const res = await fetch(URL, {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      token: sessionStorage.token,
+    });
+
+    const data = await res.json();
+    console.log(data)
+    return data;
+  }
+
+  async function updateWorkoutEntry(workoutUpdateObject, id) {
+    const URL = `${serverURL}/workout/update${id}`;
+
+    const res = await fetch(URL, {
+      method: "PATCH",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"updateInfo": workoutUpdateObject}),
+      // token: sessionStorage.token,
+    });
+    const data = await res.json();
+    console.log(data);
+  }
+
+  async function deleteWorkoutEntry(workoutEntryID) {
+    const URL = `${serverURL}/workout/delete${workoutEntryID}`;
+
+    const res = await fetch(URL, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      token: sessionStorage.token,
+    });
+    const data = await res.json();
+    console.log(data);
+  }
+
+  const workoutUpdateObject = JSON.stringify({
+    exerciseName: "again changedName",
+    machine: "newmachine",
+    date: "062225"
+  });
+  //!
+
+
+  getWorkoutEntriesByUserAndDate(sessionStorage.userID, "06242025")
   /* 
     day, date
     weight

@@ -11,6 +11,7 @@ const requireValidation = require("./middleware/validate-session")
 //controllers
 const userController = require("./controllers/user.controller")
 const cardioController = require("./controllers/cardio.controller")
+const workoutController = require("./controllers/workout.controller")
 
 const cors = require("cors")
 const mongoose = require("mongoose")
@@ -29,7 +30,7 @@ app.use("/api/health/user",userController)
 
 // requireValidation()
 app.use("/api/health/cardio", cardioController)
-
+app.use("/api/health/workout", workoutController)
 
 server.listen(PORT, () => {
     console.log(`The health app server is running on port: ${PORT}`)
