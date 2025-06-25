@@ -146,8 +146,7 @@ if (
   }
 
   async function getCardioEntry(id) {
-
-    const URL = `${serverURL}/cardio/findone${id}`
+    const URL = `${serverURL}/cardio/findone${id}`;
 
     const res = await fetch(URL, {
       method: "GET",
@@ -155,16 +154,16 @@ if (
       headers: {
         "Content-Type": "application/json",
       },
-      token: sessionStorage.token
-    })
+      token: sessionStorage.token,
+    });
 
-    const data = await res.json()
-    console.log(data)
-    return data
+    const data = await res.json();
+    console.log(data);
+    return data;
   }
 
   async function getCardioEntriesByUserAndDate(userID, date) {
-    const URL = `${serverURL}/cardio/find/${userID}:${date}`
+    const URL = `${serverURL}/cardio/find${userID}/${date}`;
 
     const res = await fetch(URL, {
       method: "GET",
@@ -172,21 +171,49 @@ if (
       headers: {
         "Content-Type": "application/json",
       },
-      token: sessionStorage.token
-    })
+      token: sessionStorage.token,
+    });
 
-    const data = await res.json()
-    console.log(data)
-    return data
+    const data = await res.json();
+    return data;
   }
 
-  console.log(sessionStorage.userID)
-  getCardioEntriesByUserAndDate(sessionStorage.userID, "06222025")
+  // getCardioEntriesByUserAndDate(sessionStorage.userID, "06222025");
 
-  async function updateCardioEntry(e, object) {
-    e.preventDefault()
-    console.log("object: ",object)
+  async function updateCardioEntry(updateObject, id) {
+    const URL = `${serverURL}/cardio/update${id}`;
+
+    const res = await fetch(URL, {
+      method: "PATCH",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({"updateInfo": updateObject}),
+      // token: sessionStorage.token,
+    });
+    const data = await res.json();
+    console.log(data);
   }
+
+  async function deleteCardioEntry(cardioEntryID) {
+    const URL = `${serverURL}/cardio/delete${cardioEntryID}`;
+
+    const res = await fetch(URL, {
+      method: "DELETE",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      token: sessionStorage.token,
+    });
+    const data = await res.json();
+    console.log(data);
+  }
+
+  const updateObject = JSON.stringify({
+    exerciseName: "again changedName",
+    machine: "newmachine",
+    date: "062225"
+  });
 
 
   /* 

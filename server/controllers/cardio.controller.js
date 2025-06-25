@@ -8,6 +8,8 @@ const serverError = (res, error) => {
   });
 };
 
+
+//!Create Cardio Entry
 router.post("/create", async (req, res) => {
   const { exerciseName, duration, machine, date, userID } = req.body;
 
@@ -39,6 +41,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+//!Find a Cardio Entry
 router.get("/findone:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,16 +63,14 @@ router.get("/findone:id", async (req, res) => {
   }
 });
 
-router.get("find:userID/:date/", async (req, res) => {
+//!Find Cardio Entries by date
+router.get("/find:userID/:date", async (req, res) => {
   try {
     const { userID, date } = req.params;
-
-    console.log(userID, date)
-    const getCardioRecords = Cardio.find({
+    const getCardioRecords = await Cardio.find({
       date: date,
       userID: userID,
     });
-
     getCardioRecords
       ? res.status(200).json({
           message: "Found!",
@@ -82,6 +83,60 @@ router.get("find:userID/:date/", async (req, res) => {
     serverError(res, err);
   }
 });
+
+//!Update Cardio Entry by ID //todo finish
+router.patch("/update:cardioEntryID", async (req, res) => {
+  try{
+    const {cardioEntryID} = req.params
+    const record = await Cardio.findOne({_id: cardioEntryID})
+    const {updateInfo} = req.body;
+
+    if (!record) {
+      res.status(404).json({
+        message: "Entry not found to update."
+      })
+    }
+
+    // This makes sure the information has been updated before returning
+    const returnOption = {new: true}
+
+    const updateCardioRecord = await Cardio.findOneAndUpdate({_id:cardioEntryID},
+      JSON.parse(updateInfo),
+      returnOption
+    )
+
+    updateCardioRecord? res.status(200).json({
+      message: "Cardio entry has been updated successfully.",
+      updateCardioRecord
+    })
+    : res.status(520).json({
+      message: "Unable to update the cardio entry. Try again later."
+    })
+  } catch(err){
+    serverError(err)
+  }
+})
+
+//!Delete a Cardio Entry
+router.delete("/delete:cardioID", async (req,res) => {
+  try {
+  const {cardioID} = req.params;
+    // console.log(cardioID)
+
+    const deleteCardioItem = await Cardio.deleteOne({
+      _id: cardioID
+    })
+
+    deleteCardioItem.deletedCount === 1 ? res.status(200).json({
+      message: "Cardio entry was deleted."
+    }) : res.status(404).json({
+      message: "Cardio entry was not found or deleted."
+    })
+  } catch (err) {
+    serverError(err)
+  }
+})
+
 
 // router.post("update")
 module.exports = router;
