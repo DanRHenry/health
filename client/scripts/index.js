@@ -117,6 +117,8 @@ if (
 
   body.append(createCardioEntryBtn);
 
+
+  //! Cardio CRUD functions
   async function createCardioEntry(e) {
     e.preventDefault();
 
@@ -177,8 +179,6 @@ if (
     const data = await res.json();
     return data;
   }
-
-  // getCardioEntriesByUserAndDate(sessionStorage.userID, "06222025");
 
   async function updateCardioEntry(updateObject, id) {
     const URL = `${serverURL}/cardio/update${id}`;
