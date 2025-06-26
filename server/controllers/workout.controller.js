@@ -11,14 +11,15 @@ const serverError = (res, error) => {
 
 //!Create Workout Entry
 router.post("/create", async (req, res) => {
-  const { exerciseName, duration, machine, date, userID } = req.body;
+  const { exerciseName, exerciseType, duration, machine, dateCreated, userID } = req.body;
 
   try {
     const workout = new Workout({
       exerciseName: exerciseName,
+      exerciseType: exerciseType,
       duration: duration,
       machine: machine,
-      date: date,
+      dateCreated: dateCreated,
       userID: userID,
     });
 

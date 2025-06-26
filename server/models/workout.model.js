@@ -5,6 +5,10 @@ const WorkoutSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    exerciseType: {
+        type: String,
+        required: true
+    },
     duration: {
         type: Number,
         required: true
@@ -13,7 +17,7 @@ const WorkoutSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: {
+    dateCreated: {
         type: String,
         required: true
     },

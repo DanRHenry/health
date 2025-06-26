@@ -2,23 +2,31 @@ const mongoose = require("mongoose");
 
 const MealsSchema = new mongoose.Schema({
     breakfast: {
-        type: object,
+        type: Object,
+        // blackbox: true,
         required: true
     },
     lunch: {
-        type: object,
+        type: Object,
+        // blackbox: true,
         required: true
     },
     dinner: {
-        type: object,
+        type: Object,
+        // blackbox: true,
         required: true
     },
     snack: {
-        type: object,
+        type: Object,
+        // blackbox: true,
         required: true
     },
     userID: {
-        type: string,
+        type: String,
+        required: true
+    },
+    date: {
+        type: String,
         required: true
     }
 })
