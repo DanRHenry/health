@@ -63,7 +63,8 @@ body {
 /* ------------------------------------------- */
 
 #workoutSectionTop {
-    background-color: rgb(250, 213, 91);
+        background-color: rgb(253, 243, 149);
+
     width: 100%;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
@@ -92,7 +93,9 @@ body {
 #workoutSection {
     height: 0;
     min-height: 0;
-    background-color: rgb(161, 150, 48);
+    /* background-color: rgb(161, 150, 48); */
+        background-color: rgb(250, 213, 91);
+
     overflow: hidden;
     transition: height .25s ease;
 }

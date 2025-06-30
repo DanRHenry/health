@@ -71,7 +71,7 @@ router.get("/find:userID/:date", async (req, res) => {
       date: date,
       userID: userID,
     });
-    getCardioRecords
+    getCardioRecords.length > 0
       ? res.status(200).json({
           message: "Found!",
           getCardioRecords,
