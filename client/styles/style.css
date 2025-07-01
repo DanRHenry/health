@@ -1,114 +1,197 @@
 body {
-    margin: 0;
+  margin: 0;
 }
 
 #prevNextSection {
-    display: flex;
-    flex-direction: row;
-    /* text-align: center; */
-    justify-content: space-evenly;
-    /* justify-items: baseline; */
-    /* justify-content: center; */
-    /* text-align: center; */
-    /* justify-content: space-between; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
-#prevNextSection > button, #prevNextSection > span {
-    /* justify-self: center; */
-    /* background-color: red; */
+#prevNextSection > button,
+#prevNextSection > span {
+  /* justify-self: center; */
+  /* background-color: red; */
+}
+
+#nextWeekBtn {
+    margin-left: 1em;
+}
+
+#prevWeekBtn {
+    margin-right: 1em;
 }
 
 /* --------------------------------------------- */
 #cardioSectionTop {
-    background-color: rgb(91, 91, 250);
-    width: 100%;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    text-align: center;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: center; */
+  background-color: rgb(91, 91, 250);
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  text-align: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
 }
 
 #cardioSectionTop:hover {
-    background-color: rgb(197, 197, 224);
+  background-color: rgb(197, 197, 224);
 }
 
 #cardioTitle {
-    font-size: large;
-    color: rgb(226, 226, 226);
-    text-shadow: 1.5px 1.5px black;
+  font-size: large;
+  color: rgb(226, 226, 226);
+  text-shadow: 1.5px 1.5px black;
 }
 
 #cardioSectionBtn {
-    user-select: none;
-    float: right;
-    transition: transform .15s ease;
+  user-select: none;
+  float: right;
+  transition: transform 0.15s ease;
 }
 
 #cardioSection {
-    height: 0;
-    min-height: 0;
-    background-color: rgb(114, 114, 255);
-    overflow: hidden;
-    transition: height .25s ease;
+  height: 0;
+  min-height: 0;
+  background-color: rgb(114, 114, 255);
+  overflow: hidden;
+  transition: min-height 0.25s ease;
 }
 
 #cardioSection > table {
-    background-color: white;
-    width: 100%;
+  background-color: white;
+  width: 100%;
 }
 
+.cardioRows > input {
 
+    background-color: blue;
+    /* opacity: .5; */
+}
 /* ------------------------------------------- */
 
 #workoutSectionTop {
-        background-color: rgb(253, 243, 149);
+  background-color: rgb(253, 243, 149);
 
-    width: 100%;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    text-align: center;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: center; */
+  width: 100%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  text-align: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
 }
 
-#workoutSectionTop:hover{
-    background-color: rgb(197, 197, 224);
+#workoutSectionTop:hover {
+  background-color: rgb(197, 197, 224);
 }
 
 #workoutTitle {
-    font-size: large;
-    color: rgb(12, 12, 12);
-    /* text-shadow: 1.5px 1.5px black; */
+  font-size: large;
+  color: rgb(12, 12, 12);
+  /* text-shadow: 1.5px 1.5px black; */
 }
 
 #workoutSectionBtn {
-    user-select: none;
-    float: right;
-    transition: transform .15s ease;
+  user-select: none;
+  float: right;
+  transition: transform 0.15s ease;
 }
 
 #workoutSection {
-    height: 0;
-    min-height: 0;
-    /* background-color: rgb(161, 150, 48); */
-        background-color: rgb(250, 213, 91);
+  /* height: 0;
+  min-height: 0;
+  background-color: rgb(250, 213, 91);
 
-    overflow: hidden;
-    transition: height .25s ease;
+  overflow: hidden;
+  transition: height 0.25s ease; */
+
+  height: 0;
+  min-height: 0;
+  background-color: rgb(250, 213, 91);
+  overflow: hidden;
+  transition: min-height 0.25s ease;
 }
 
 #workoutSection > table {
-    background-color: white;
-    width: 100%;
+  background-color: white;
+  width: 100%;
 }
 
-
 #header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+td {
+  /* border: 1px solid black; */
+  /* width: 100%; */
+  justify-content: center;
+}
+
+.workoutCheckboxes {
+  /* display: none; */
+  color: red;
+  /* display: none; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* text-indent: 1em; */
+  /* justify-self: center; */
+  /* border: 1px solid black; */
+}
+
+.workoutCheckboxes,
+#workoutInputPlaceholder {
+  width: fit-content;
+}
+
+#workoutSection > table > tr,
+#cardioSection > table > tr {
+  /* color: red; */
+  font-size: clamp(10px, 1.5vw, 2em);
+}
+
+#workoutSection > table > tr > th,
+#cardioSection > table > tr > th {
+  font-size: clamp(14px, 2vw, 2.5em);
+  max-width: 25vw;
+}
+
+#cardioInputBtn{
+    /* border: 1px solid black; */
     text-align: center;
+    font-weight: bolder;
+    font-size: large;
+}
+
+#cardioInputBtn:hover{
+    color: gray;
+}
+
+#cardioInputBtn:active{
+    color: black;
+}
+
+#workoutHeaders,
+#cardioHeaders {
+}
+
+tr {
+    min-height: fit-content;
+    height: 1.5em;
+}
+
+td > input {
+  max-width: 23vw;
+/* text-align: center; */
+
+display: flex;
+  flex-direction: column;
+
+    /* 
+  background-color: red; */
+  justify-self: center;
 }

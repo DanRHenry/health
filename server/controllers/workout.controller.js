@@ -16,7 +16,7 @@ router.post("/create", async (req, res) => {
   try {
     const workout = new Workout({
       exerciseName: exerciseName,
-      exerciseType: exerciseType,
+      // exerciseType: exerciseType,
       duration: duration,
       machine: machine,
       dateCreated: dateCreated,

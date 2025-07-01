@@ -136,24 +136,23 @@ function createMainPage() {
     nextDateBtn.id = "nextDateBtn";
     nextDateBtn.innerText = ">>";
 
-    const prevWeekBtn = document.createElement("button")
-    prevWeekBtn.id = "prevWeekBtn"
-    prevWeekBtn.innerText = "| <"
-    prevWeekBtn.addEventListener("click", prevWeek)
+    const prevWeekBtn = document.createElement("button");
+    prevWeekBtn.id = "prevWeekBtn";
+    prevWeekBtn.innerText = "| <";
+    prevWeekBtn.addEventListener("click", prevWeek);
 
-    const nextWeekBtn = document.createElement("button")
-    nextWeekBtn.id = "nextWeekBtn"
-    nextWeekBtn.innerText = "> |"
-    nextWeekBtn.addEventListener("click", nextWeek)
+    const nextWeekBtn = document.createElement("button");
+    nextWeekBtn.id = "nextWeekBtn";
+    nextWeekBtn.innerText = "> |";
+    nextWeekBtn.addEventListener("click", nextWeek);
 
-    const prev = document.createElement("span")
-    prev.append(prevWeekBtn, prevDateBtn)
+    const prev = document.createElement("span");
+    prev.append(prevWeekBtn, prevDateBtn);
 
-    const next = document.createElement("span")
-    next.append(nextDateBtn,nextWeekBtn)
+    const next = document.createElement("span");
+    next.append(nextDateBtn, nextWeekBtn);
     prevNextSection.append(prev, dateDisplay, next);
     nextDateBtn.addEventListener("click", nextDate);
-
 
     dateDisplay.innerText = dateDisplayInfo;
 
@@ -207,8 +206,8 @@ function createMainPage() {
       createDataObject(sessionStorage.userID, focusedDate);
     }
 
-        function prevWeek() {
-      dateOffset-=7;
+    function prevWeek() {
+      dateOffset -= 7;
       let adjustedDate = new Date(today);
       adjustedDate.setDate(today.getDate() + dateOffset);
 
@@ -233,7 +232,7 @@ function createMainPage() {
     }
 
     function nextWeek() {
-      dateOffset+=7;
+      dateOffset += 7;
       let adjustedDate = new Date(today);
       adjustedDate.setDate(today.getDate() + dateOffset);
 
@@ -295,8 +294,8 @@ function buildCardioWindow() {
 }
 
 function buildCardioContents(cardioObject) {
-  console.log(cardioObject)
-  cardioSection.innerHTML = ""
+  // console.log(cardioObject);
+  cardioSection.innerHTML = "";
   const cardioTable = document.createElement("table");
 
   const cardioRow = document.createElement("tr");
@@ -329,50 +328,98 @@ function buildCardioContents(cardioObject) {
     cardioLengthHeader
   );
 
-  cardioTable.append(cardioRow);
+  //---------------------------
+  const cardioInputRow = document.createElement("tr");
+
+  const cardioInputBtn = document.createElement("td");
+  cardioInputBtn.id = "cardioInputBtn";
+  cardioInputBtn.innerText = "+";
+  cardioInputBtn.addEventListener("click", handleCardioInputClick);
+
+  const cardioNameInputLocation = document.createElement("td");
+  cardioNameInputLocation.id = "cardioNameInputLocation";
+  cardioNameInputLocation.name = "cardioNameInputLocation";
+  const cardioNameInput = document.createElement("input");
+  cardioNameInput.id = "cardioNameInput";
+  cardioNameInput.spellcheck = "false";
+  cardioNameInputLocation.appendChild(cardioNameInput);
+  cardioNameInput.addEventListener("keydown", handleCardioInputClick);
+
+  const cardioMachineInputLocation = document.createElement("td");
+  cardioMachineInputLocation.id = "cardioMachineInputLocation";
+  cardioMachineInputLocation.name = "cardioMachineInputLocation";
+  const cardioMachineInput = document.createElement("input");
+  cardioMachineInput.id = "cardioMachineInput";
+  cardioMachineInput.spellcheck = "false";
+  cardioMachineInput.addEventListener("keydown", handleCardioInputClick);
+  cardioMachineInputLocation.appendChild(cardioMachineInput);
+
+  const cardioLengthInputLocation = document.createElement("td");
+  cardioLengthInputLocation.id = "cardioLengthInputLocation";
+  cardioLengthInputLocation.name = "cardioLengthInputLocation";
+  const cardioLengthInput = document.createElement("input");
+  cardioLengthInput.id = "cardioLengthInput";
+  cardioLengthInput.spellcheck = "false";
+  cardioLengthInput.type = "number";
+  cardioLengthInput.min = "0";
+  cardioLengthInput.addEventListener("keydown", handleCardioInputClick);
+
+  cardioLengthInputLocation.appendChild(cardioLengthInput);
+
+  cardioInputRow.append(
+    cardioInputBtn,
+    cardioNameInputLocation,
+    cardioMachineInputLocation,
+    cardioLengthInputLocation
+  );
+
+  cardioTable.append(cardioRow, cardioInputRow);
 
   cardioSection.append(cardioTable);
   //-------------------------------
-  for (let i = 0; i < cardioObject.length; i++) {
-    let year = Number(cardioObject[i].date.slice(4))
-    const date = Number(cardioObject[i].date.slice(2, 4))
+  if (cardioObject) {
+    for (let i = 0; i < cardioObject.length; i++) {
+      let year = Number(cardioObject[i].date.slice(4));
+      const date = Number(cardioObject[i].date.slice(2, 4));
 
-    const month = Number(cardioObject[i].date.slice(0,2))
-    const dateText = `${month}/${date}/${year}`;
-    const nameText = cardioObject[i].exerciseName;
-    const machineText = cardioObject[i].machine;
-    const lengthText = `${cardioObject[i].duration}min`;
+      const month = Number(cardioObject[i].date.slice(0, 2));
+      const dateText = `${month}/${date}/${year}`;
+      const nameText = cardioObject[i].exerciseName;
+      const machineText = cardioObject[i].machine;
+      const lengthText = `${cardioObject[i].duration}min`;
 
-    const cardioRow = document.createElement("tr");
-    cardioRow.className = "cardioRows";
+      const cardioRow = document.createElement("tr");
+      cardioRow.className = "cardioRows";
 
-    const checkBox = document.createElement("input");
-    checkBox.type = "checkbox";
-    checkBox.className = "cardioCheckboxes";
+      const checkBox = document.createElement("input");
+      checkBox.type = "checkbox";
+      checkBox.className = "cardioCheckboxes";
+      checkBox.id = `cardioCheckbox${i}`;
 
-    const cardioDate = document.createElement("td");
-    cardioDate.innerText = dateText;
-    cardioDate.className = "cardioDates";
+      const cardioDate = document.createElement("td");
+      cardioDate.innerText = dateText;
+      cardioDate.className = "cardioDates";
 
-    const cardioName = document.createElement("td");
-    cardioName.innerText = nameText;
-    cardioName.className = "cardioNames";
+      const cardioName = document.createElement("td");
+      cardioName.innerText = nameText;
+      cardioName.className = "cardioNames";
 
-    const cardioMachine = document.createElement("td");
-    cardioMachine.innerText = machineText;
-    cardioMachine.className = "cardioMachines";
+      const cardioMachine = document.createElement("td");
+      cardioMachine.innerText = machineText;
+      cardioMachine.className = "cardioMachines";
 
-    const cardioLength = document.createElement("td");
-    cardioLength.innerText = lengthText;
-    cardioLength.className = "cardioLengths";
-    cardioRow.append(
-      checkBox,
-      // cardioDate,
-      cardioName,
-      cardioMachine,
-      cardioLength
-    );
-    cardioTable.append(cardioRow);
+      const cardioLength = document.createElement("td");
+      cardioLength.innerText = lengthText;
+      cardioLength.className = "cardioLengths";
+      cardioRow.append(
+        checkBox,
+        // cardioDate,
+        cardioName,
+        cardioMachine,
+        cardioLength
+      );
+      cardioTable.append(cardioRow);
+    }
   }
 }
 
@@ -397,6 +444,132 @@ function buildWorkoutWindow() {
   prevNextSection.after(workoutSectionTop);
   workoutSectionTop.after(workoutSection);
   // buildWorkoutContents();
+}
+
+function buildWorkoutContents(workoutObject) {
+  // console.log("bird")
+  workoutSection.innerHTML = "";
+  const workoutTable = document.createElement("table");
+
+  const workoutRow = document.createElement("tr");
+
+  const workoutCheckHeader = document.createElement("th");
+  workoutCheckHeader.innerText = "Select";
+  workoutCheckHeader.className = "workoutHeaders";
+
+  const workoutDateHeader = document.createElement("th");
+  workoutDateHeader.innerText = "Date";
+  workoutDateHeader.className = "workoutHeaders";
+
+  const workoutNameHeader = document.createElement("th");
+  workoutNameHeader.innerText = "Name";
+  workoutNameHeader.className = "workoutHeaders";
+
+  const workoutMachineHeader = document.createElement("th");
+  workoutMachineHeader.innerText = "Machine";
+  workoutMachineHeader.className = "workoutHeaders";
+
+  const workoutLengthHeader = document.createElement("th");
+  workoutLengthHeader.innerText = "Length";
+  workoutLengthHeader.className = "workoutHeaders";
+
+  workoutRow.append(
+    workoutCheckHeader,
+    // workoutDateHeader,
+    workoutNameHeader,
+    workoutMachineHeader,
+    workoutLengthHeader
+  );
+  //---------------------------
+  const workoutInputRow = document.createElement("tr");
+
+  const workoutInputBtn = document.createElement("td");
+  workoutInputBtn.id = "workoutInputBtn";
+  workoutInputBtn.innerText = "+";
+
+  const workoutNameInputLocation = document.createElement("td");
+  workoutNameInputLocation.id = "workoutNameInputLocation";
+  workoutNameInputLocation.name = "workoutNameInputLocation";
+  const workoutNameInput = document.createElement("input");
+  workoutNameInput.id = "workoutNameInput";
+  workoutNameInput.spellcheck = "false";
+  workoutNameInput.addEventListener("keydown", handleWorkoutInputClick);
+  workoutNameInputLocation.appendChild(workoutNameInput);
+
+  const workoutMachineInputLocation = document.createElement("td");
+  workoutMachineInputLocation.id = "workoutMachineInputLocation";
+  workoutMachineInputLocation.name = "workoutMachineInputLocation";
+  const workoutMachineInput = document.createElement("input");
+  workoutMachineInput.id = `workoutMachineInput`;
+  workoutMachineInput.spellcheck = "false";
+  workoutMachineInput.addEventListener("keydown", handleWorkoutInputClick);
+  workoutMachineInputLocation.appendChild(workoutMachineInput);
+
+  const workoutLengthInputLocation = document.createElement("td");
+  workoutLengthInputLocation.id = "workoutLengthInputLocation";
+  workoutLengthInputLocation.name = "workoutLengthInputLocation";
+  const workoutLengthInput = document.createElement("input");
+  workoutLengthInput.id = "workoutLengthInput";
+  workoutLengthInput.spellcheck = "false";
+  workoutLengthInput.addEventListener("keypress", handleWorkoutInputClick);
+  workoutLengthInputLocation.appendChild(workoutLengthInput);
+
+  workoutInputRow.append(
+    workoutInputBtn,
+    workoutNameInputLocation,
+    workoutMachineInputLocation,
+    workoutLengthInputLocation
+  );
+  //------------------------
+  workoutTable.append(workoutRow, workoutInputRow);
+
+  workoutSection.append(workoutTable);
+
+  if (workoutObject) {
+    //-------------------------------
+    for (let i = 0; i < workoutObject.length; i++) {
+      let year = Number(workoutObject[i].dateCreated.slice(4));
+      const date = Number(workoutObject[i].dateCreated.slice(2, 4));
+
+      const month = Number(workoutObject[i].dateCreated.slice(0, 2));
+      const dateText = `${month}/${date}/${year}`;
+      const nameText = workoutObject[i].exerciseName;
+      const machineText = workoutObject[i].machine;
+      const lengthText = `${workoutObject[i].duration}min`;
+
+      const workoutRow = document.createElement("tr");
+      workoutRow.className = "workoutRows";
+
+      const checkBox = document.createElement("input");
+      checkBox.type = "checkbox";
+      checkBox.className = "workoutCheckboxes";
+      checkBox.id = `workoutCheckbox${i}`;
+
+      const workoutDate = document.createElement("td");
+      workoutDate.innerText = dateText;
+      workoutDate.className = "workoutDates";
+
+      const workoutName = document.createElement("td");
+      workoutName.innerText = nameText;
+      workoutName.className = "workoutNames";
+
+      const workoutMachine = document.createElement("td");
+      workoutMachine.innerText = machineText;
+      workoutMachine.className = "workoutMachines";
+
+      const workoutLength = document.createElement("td");
+      workoutLength.innerText = lengthText;
+      workoutLength.className = "workoutLengths";
+      workoutRow.append(
+        checkBox,
+        // workoutDate,
+        workoutName,
+        workoutMachine,
+        workoutLength
+      );
+      workoutTable.append(workoutRow);
+    }
+  }
 }
 /* 
     day, date
@@ -433,33 +606,79 @@ function buildWorkoutWindow() {
 
 //! Callback Functions
 function toggleCardioSectionMenu() {
-  if (!cardioSection.style.height) {
-    cardioSection.style.height = "40vh";
-    // cardioSectionBtn.style.transform = "rotate(45deg)";
+  if (!cardioSection.style.minHeight) {
+    cardioSection.style.maxHeight = null;
+    cardioSection.style.minHeight = "30vh";
+    cardioSection.style.height = "fit-content";
   } else {
-    cardioSection.style.height = null;
-    // cardioSectionBtn.style = null;
+    cardioSection.style.minHeight = null;
+    cardioSection.style.maxHeight = 0;
   }
 }
 
 function toggleWorkoutSectionMenu() {
-  if (!workoutSection.style.height) {
-    workoutSection.style.height = "40vh";
-    // cardioSectionBtn.style.transform = "rotate(45deg)";
+  if (!workoutSection.style.minHeight) {
+    workoutSection.style.maxHeight = null;
+    workoutSection.style.minHeight = "30vh";
+    workoutSection.style.height = "fit-content";
   } else {
-    workoutSection.style.height = null;
-    // cardioSectionBtn.style = null;
+    workoutSection.style.minHeight = null;
+    workoutSection.style.maxHeight = 0;
+  }
+}
+
+async function handleCardioInputClick(e) {
+  // console.log(e.key)
+  if (e.key !== "Enter") {
+    return;
+  }
+
+  const cardioName = document.getElementById("cardioNameInput").value;
+
+  const cardioMachine = document.getElementById("cardioMachineInput").value;
+
+  const cardioLength = document.getElementById("cardioLengthInput").value;
+
+  // console.log("clicked", cardioName, cardioMachine, cardioLength);
+
+  if (cardioName && cardioMachine && cardioLength) {
+    console.log("new cardio:",cardioName, cardioMachine, cardioLength)
+    await createCardioEntry(cardioName, cardioMachine, cardioLength);
+    await createDataObject(sessionStorage.userID, focusedDate);
+  }
+}
+
+async function handleWorkoutInputClick(e) {
+  // console.log(e.key)
+  if (e.key !== "Enter") {
+    return;
+  }
+
+  const workoutName = document.getElementById("workoutNameInput").value;
+
+  const workoutMachine = document.getElementById("workoutMachineInput").value;
+
+  const workoutLength = document.getElementById("workoutLengthInput").value;
+
+  // console.log("clicked", workoutName, workoutMachine, workoutLength);
+
+  if (workoutName && workoutMachine && workoutLength) {
+    console.log("new workout: ",workoutName, workoutMachine, workoutLength)
+    await createWorkoutEntry(workoutName, workoutMachine, workoutLength);
+
+    await createDataObject(sessionStorage.userID, focusedDate);
+    
   }
 }
 
 //! Cardio CRUD functions
-async function createCardioEntry(e) {
+async function createCardioEntry(exerciseName, machine, duration) {
   // e.preventDefault();
 
   const cardioEntryBody = JSON.stringify({
-    exerciseName: "exerciseName",
-    duration: 12,
-    machine: "machine",
+    exerciseName: exerciseName,
+    duration: duration,
+    machine: machine,
     date: focusedDate,
     userID: sessionStorage.userID,
   });
@@ -478,7 +697,7 @@ async function createCardioEntry(e) {
 
   const data = await res.json();
 
-  console.log(data);
+  // console.log(data);
 }
 
 async function getCardioEntry(id) {
@@ -512,10 +731,10 @@ async function getCardioEntriesByUserAndDate(userID, date) {
 
   const data = await res.json();
 
-    if (data.message != "No Records Found.") {
+  if (data.message != "No Records Found.") {
     // console.log("Cardio Records: ",data);
   } else {
-    console.log("Is there any Cardio data?",console.log(data.message))
+    // console.log("Is there any Cardio data?", console.log(data.message));
   }
   return data;
 }
@@ -557,13 +776,12 @@ const cardioUpdateObject = JSON.stringify({
 //!
 
 //! Workout CRUD functions
-async function createWorkoutEntry(workoutName, exerciseType, duration, machine) {
-
+async function createWorkoutEntry(workoutName, machine, duration) {
   const workoutEntryBody = JSON.stringify({
-    exerciseName: "workoutName",
-    exerciseType: "upperbody",
-    duration: 12,
-    machine: "machine",
+    exerciseName: workoutName,
+    duration: duration,
+    machine: machine,
+    // exerciseType: "default",
     dateCreated: focusedDate,
     userID: sessionStorage.userID,
   });
@@ -582,7 +800,7 @@ async function createWorkoutEntry(workoutName, exerciseType, duration, machine) 
 
   const data = await res.json();
 
-  console.log(data);
+  // console.log(data);
 }
 
 async function getWorkoutEntry(id) {
@@ -603,7 +821,6 @@ async function getWorkoutEntry(id) {
 }
 
 async function getWorkoutEntriesByUserAndDate(userID, date) {
-
   // console.log(userID, date)
   const URL = `${serverURL}/workout/find${userID}/${date}`;
 
@@ -621,7 +838,7 @@ async function getWorkoutEntriesByUserAndDate(userID, date) {
   if (data.message != "No Records Found.") {
     // console.log("Workout Records: ",data);
   } else {
-    console.log("Is there any Workout data?",data.message)
+    console.log("Is there any Workout data?", data.message);
   }
   return data;
 }
@@ -663,8 +880,12 @@ const workoutUpdateObject = JSON.stringify({
 //!
 
 //! Meals CRUD functions
-async function createMealsEntry(breakfastObject, lunchObject, dinnerObject, snackObject) {
-
+async function createMealsEntry(
+  breakfastObject,
+  lunchObject,
+  dinnerObject,
+  snackObject
+) {
   const mealsEntryBody = JSON.stringify({
     breakfast: { name: "breakfast Name" },
     lunch: { name: "lunch Name" },
@@ -688,11 +909,10 @@ async function createMealsEntry(breakfastObject, lunchObject, dinnerObject, snac
 
   const data = await res.json();
   if (data.message != "No Records Found.") {
-    console.log("Meals Records: ",data);
-      console.log(data);
-
+    console.log("Meals Records: ", data);
+    console.log(data);
   } else {
-    console.log("Is there any Meals data?")
+    console.log("Is there any Meals data?");
   }
 }
 
@@ -728,10 +948,10 @@ async function getMealsEntriesByUserAndDate(userID, date) {
   const data = await res.json();
   // console.log(data);
 
-      if (data.message != "No Records Found.") {
+  if (data.message != "No Records Found.") {
     // console.log("Meals Records: ",data);
   } else {
-    console.log("Is there any Meals data?",console.log(data.message))
+    // console.log("Is there any Meals data?", console.log(data.message));
   }
 
   return data;
@@ -789,82 +1009,52 @@ const mealsUpdateObject = JSON.stringify({
 //!
 
 async function createDataObject(userID, date) {
-let dataObject = {
-  workout: {data: []},
-  cardio: {data: []},
-  meals: {data: []},
-  user: {data: []},
-};
-  const workoutData = await getWorkoutEntriesByUserAndDate(userID, date)
-  const workoutArray = workoutData.getWorkoutRecords
+  console.log("creating data object");
+  let dataObject = {
+    workout: { data: [] },
+    cardio: { data: [] },
+    meals: { data: [] },
+    user: { data: [] },
+  };
 
+  console.log("fetching workout data...");
+  const workoutData = await getWorkoutEntriesByUserAndDate(userID, date);
+  const workoutArray = await workoutData.getWorkoutRecords;
+  console.log("workoutArray: ", workoutArray);
 
-  const cardioData = await getCardioEntriesByUserAndDate(userID, date)
-  const cardioArray = cardioData.getCardioRecords
+  console.log("fetching cardio data...");
+  const cardioData = await getCardioEntriesByUserAndDate(userID, date);
+  const cardioArray = await cardioData.getCardioRecords;
 
+  console.log("cardioArray: ", cardioArray);
+  const mealsData = await getMealsEntriesByUserAndDate(userID, date);
+  const mealsDataArray = await mealsData.getMealsRecords;
 
-  const mealsData = await getMealsEntriesByUserAndDate(userID, date)
-  const mealsDataArray = mealsData.getMealsRecords
+  dataObject.workout = workoutArray;
+  dataObject.cardio = cardioArray;
+  dataObject.meals = mealsDataArray;
 
-  dataObject.workout = workoutArray
-  dataObject.cardio = cardioArray
-  dataObject.meals = mealsDataArray
+  // console.log(dataObject)
 
-  fillMenuContents(dataObject)
+  fillMenuContents(dataObject);
 }
 
 function fillMenuContents(object) {
-  console.log(object)
+  console.log(object);
 
   //! Workout
-  if (object.workout) {
-
-  for (let i = 0; i < object.workout.length; i++) {
-    // console.log(object.workout[i])
-
-    // const titleSection = 
-
-  }
-  } else {
-    workoutSection.innerHTML = ""
-  }
+  buildWorkoutContents(object.workout);
 
   //! Cardio
-  if (object.cardio) {
-
-  
-  // for (let i = 0; i < object.cardio.length; i++) {
-  //   console.log(object.cardio[i])
-  // }
-  buildCardioContents(object.cardio)
-} else {
-  cardioSection.innerHTML = ""
-}
+  buildCardioContents(object.cardio);
   //! Meals
   if (object.meals) {
+    // buildMealsContents(object.meals)
 
-
-  for (let i = 0; i < object.meals.length; i++) {
-    // console.log(object.meals[i])
-  }
+    for (let i = 0; i < object.meals.length; i++) {
+      // console.log(object.meals[i])
+    }
   } else {
-    console.log('clear meals section content here')
+    //todo    console.log("clear meals section content here");
   }
 }
-
-// createDataObject(sessionStorage.userID, focusedDate)
-
-const createcardiobtn = document.createElement("button");
-createcardiobtn.innerText = "cardio";
-createcardiobtn.addEventListener("click", createCardioEntry);
-const createmealsbtn = document.createElement("button");
-createmealsbtn.innerText = "meal";
-createmealsbtn.addEventListener("click", createMealsEntry);
-const createworkoutbtn = document.createElement("button");
-createworkoutbtn.innerText = "workout";
-createworkoutbtn.addEventListener("click", createWorkoutEntry);
-
-body.append(createcardiobtn, createmealsbtn, createworkoutbtn);
-// createCardioEntry()
-// createMealsEntry()
-// createWorkoutEntry()

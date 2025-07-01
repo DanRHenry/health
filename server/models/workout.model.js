@@ -7,7 +7,7 @@ const WorkoutSchema = new mongoose.Schema({
     },
     exerciseType: {
         type: String,
-        required: true
+        required: false
     },
     duration: {
         type: Number,
