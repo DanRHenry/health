@@ -281,7 +281,7 @@ function buildCardioWindow() {
   cardioTitle.id = "cardioTitle";
 
   const cardioSectionBtn = document.createElement("span");
-  cardioSectionBtn.innerText = "+";
+  cardioSectionBtn.innerText = "-";
   cardioSectionBtn.id = "cardioSectionBtn";
 
   const cardioSection = document.createElement("div");
@@ -333,8 +333,8 @@ function buildCardioContents(cardioObject) {
 
   const cardioInputBtn = document.createElement("td");
   cardioInputBtn.id = "cardioInputBtn";
-  cardioInputBtn.innerText = "+";
-  cardioInputBtn.addEventListener("click", handleCardioInputClick);
+  cardioInputBtn.innerText = "";
+  // cardioInputBtn.addEventListener("click", handleCardioInputClick);
 
   const cardioNameInputLocation = document.createElement("td");
   cardioNameInputLocation.id = "cardioNameInputLocation";
@@ -450,6 +450,7 @@ function buildWorkoutContents(workoutObject) {
   // console.log("bird")
   workoutSection.innerHTML = "";
   const workoutTable = document.createElement("table");
+  workoutTable.id = "workoutTable"
 
   const workoutRow = document.createElement("tr");
 
@@ -485,7 +486,7 @@ function buildWorkoutContents(workoutObject) {
 
   const workoutInputBtn = document.createElement("td");
   workoutInputBtn.id = "workoutInputBtn";
-  workoutInputBtn.innerText = "+";
+  workoutInputBtn.innerText = "";
 
   const workoutNameInputLocation = document.createElement("td");
   workoutNameInputLocation.id = "workoutNameInputLocation";
@@ -511,6 +512,8 @@ function buildWorkoutContents(workoutObject) {
   const workoutLengthInput = document.createElement("input");
   workoutLengthInput.id = "workoutLengthInput";
   workoutLengthInput.spellcheck = "false";
+  workoutLengthInput.type = "number"
+  workoutLengthInput.min = "0"
   workoutLengthInput.addEventListener("keypress", handleWorkoutInputClick);
   workoutLengthInputLocation.appendChild(workoutLengthInput);
 
@@ -544,6 +547,32 @@ function buildWorkoutContents(workoutObject) {
       checkBox.type = "checkbox";
       checkBox.className = "workoutCheckboxes";
       checkBox.id = `workoutCheckbox${i}`;
+      checkBox.addEventListener("change", function () {
+        const deleteRowSection = document.createElement("tr")
+        deleteRowSection.id = `deleteWorkoutRowSection_${i}`
+        deleteRowSection.className = "deleteRows workoutRows";
+        const spacer = document.createElement("td")
+        spacer.style.backgroundColor = "initial"
+        const deleterow = document.createElement("td")
+        // deleterow.id = `workoutDeleteRow_${i}`
+        deleterow.className = "workoutDeleteRowButtons"
+        deleteRowSection.append(spacer,deleterow)
+
+        if (this.checked) {
+          // workoutRow.style.backgroundColor = "red"
+          workoutRow.style.textDecoration = "line-through"
+          deleterow.innerText = "Delete?"
+          deleterow.col
+          deleterow.colSpan = "2"
+          workoutRow.after(deleteRowSection)
+        } 
+        else if (!this.checked) {
+          workoutRow.style.textDecoration = null;
+          console.log("i",i)
+          const deleteRowSection = document.getElementById(`deleteWorkoutRowSection_${i}`)
+          deleteRowSection.remove()
+        }
+      })
 
       const workoutDate = document.createElement("td");
       workoutDate.innerText = dateText;

@@ -105,7 +105,6 @@ body {
 
   overflow: hidden;
   transition: height 0.25s ease; */
-
   height: 0;
   min-height: 0;
   background-color: rgb(250, 213, 91);
@@ -194,4 +193,23 @@ display: flex;
     /* 
   background-color: red; */
   justify-self: center;
+}
+
+.deleteRows{
+  /* background-color: red; */
+  text-align: center;
+}
+
+.workoutDeleteRowButtons{
+  background-color: red;
+  border: 1px solid black;
+  border-radius: .5em;
+}
+
+.workoutDeleteRowButtons:hover {
+  background-color: gray;
+}
+
+.workoutDeleteRowButtons:active{
+  background-color: red;
 }
