@@ -386,7 +386,7 @@ function buildCardioContents(cardioObject) {
       const dateText = `${month}/${date}/${year}`;
       const nameText = cardioObject[i].exerciseName;
       const machineText = cardioObject[i].machine;
-      const lengthText = `${cardioObject[i].duration}min`;
+      const lengthText = `${cardioObject[i].duration} min`;
 
       const cardioRow = document.createElement("tr");
       cardioRow.className = "cardioRows";
@@ -396,6 +396,37 @@ function buildCardioContents(cardioObject) {
       checkBox.className = "cardioCheckboxes";
       checkBox.id = `cardioCheckbox${i}`;
 
+      checkBox.addEventListener("change", function () {
+        const deleteRowSection = document.createElement("tr")
+        deleteRowSection.id = `deleteCardioRowSection_${i}`
+        deleteRowSection.className = "deleteRows cardioRows";
+        const spacer = document.createElement("td")
+        spacer.style.backgroundColor = "initial"
+        const deleterow = document.createElement("td")
+        // deleterow.id = `cardioDeleteRow_${i}`
+        deleterow.className = "cardioDeleteRowButtons"
+        deleterow.addEventListener("click", () => {
+          // console.log(cardioObject[i])
+          deleteCardioEntry(cardioObject[i]._id)
+        })
+        deleteRowSection.append(spacer,deleterow)
+
+        if (this.checked) {
+          // cardioRow.style.backgroundColor = "red"
+          cardioRow.style.textDecoration = "line-through"
+          deleterow.innerText = "Delete?"
+          deleterow.col
+          deleterow.colSpan = "3"
+          cardioRow.after(deleteRowSection)
+        } 
+        else if (!this.checked) {
+          cardioRow.style.textDecoration = null;
+          console.log("i",i)
+          const deleteRowSection = document.getElementById(`deleteCardioRowSection_${i}`)
+          deleteRowSection.remove()
+        }
+      })
+
       const cardioDate = document.createElement("td");
       cardioDate.innerText = dateText;
       cardioDate.className = "cardioDates";
@@ -403,14 +434,90 @@ function buildCardioContents(cardioObject) {
       const cardioName = document.createElement("td");
       cardioName.innerText = nameText;
       cardioName.className = "cardioNames";
+      cardioName.addEventListener("click", handleCardioNameClick)
+
+      async function handleCardioNameClick () {
+        cardioName.removeEventListener("click", handleCardioNameClick)
+        const cardioNameInput = document.createElement("input")
+        cardioNameInput.placeholder = cardioName.innerText
+        cardioName.innerText = null
+        cardioName.appendChild(cardioNameInput)
+        cardioNameInput.focus()
+        cardioNameInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && cardioNameInput.value !== null) {
+            const updateObject = {
+              exerciseName: cardioNameInput.value
+            }
+            updateCardioEntry(updateObject, cardioObject[i]._id)
+
+            console.log(sessionStorage.userID)
+            console.log(focusedDate)
+
+            // createDataObject(sessionStorage.userID, focusedDate);
+            // createDataObject(userID, date)
+            buildCardioContents(object.cardioObject)
+          }
+        })
+      }
 
       const cardioMachine = document.createElement("td");
       cardioMachine.innerText = machineText;
       cardioMachine.className = "cardioMachines";
+      cardioMachine.addEventListener("click", handleCardioMachineClick)
+
+      async function handleCardioMachineClick () {
+        cardioMachine.removeEventListener("click", handleCardioMachineClick)
+        const cardioMachineInput = document.createElement("input")
+        cardioMachineInput.placeholder = cardioMachine.innerText
+        cardioMachine.innerText = null
+        cardioMachine.appendChild(cardioMachineInput)
+        cardioMachineInput.focus()
+        cardioMachineInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && cardioMachineInput.value !== null) {
+            const updateObject = {
+              machine: cardioMachineInput.value
+            }
+            updateCardioEntry(updateObject, cardioObject[i]._id)
+
+            console.log(sessionStorage.userID)
+            console.log(focusedDate)
+
+            // createDataObject(sessionStorage.userID, focusedDate);
+            // createDataObject(userID, date)
+            buildCardioContents(object.cardioObject)
+          }
+        })
+      }
 
       const cardioLength = document.createElement("td");
       cardioLength.innerText = lengthText;
       cardioLength.className = "cardioLengths";
+      cardioLength.addEventListener("click", handleCardioLengthClick)
+
+      async function handleCardioLengthClick () {
+        cardioLength.removeEventListener("click", handleCardioLengthClick)
+        const cardioLengthInput = document.createElement("input")
+        cardioLengthInput.placeholder = cardioLength.innerText
+        cardioLength.innerText = null
+        cardioLength.appendChild(cardioLengthInput)
+        cardioLengthInput.focus()
+        cardioLengthInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter" && cardioLengthInput.value !== null) {
+            const updateObject = {
+              duration: cardioLengthInput.value
+            }
+            updateCardioEntry(updateObject, cardioObject[i]._id)
+
+            console.log(sessionStorage.userID)
+            console.log(focusedDate)
+
+            // createDataObject(sessionStorage.userID, focusedDate);
+            // createDataObject(userID, date)
+            buildCardioContents(object.cardioObject)
+          }
+        })
+      }
+
       cardioRow.append(
         checkBox,
         // cardioDate,
@@ -538,7 +645,7 @@ function buildWorkoutContents(workoutObject) {
       const dateText = `${month}/${date}/${year}`;
       const nameText = workoutObject[i].exerciseName;
       const machineText = workoutObject[i].machine;
-      const lengthText = `${workoutObject[i].duration}min`;
+      const lengthText = `${workoutObject[i].duration} min`;
 
       const workoutRow = document.createElement("tr");
       workoutRow.className = "workoutRows";
@@ -556,6 +663,10 @@ function buildWorkoutContents(workoutObject) {
         const deleterow = document.createElement("td")
         // deleterow.id = `workoutDeleteRow_${i}`
         deleterow.className = "workoutDeleteRowButtons"
+        deleterow.addEventListener("click", () => {
+          // console.log(workoutObject[i])
+          deleteWorkoutEntry(workoutObject[i]._id)
+        })
         deleteRowSection.append(spacer,deleterow)
 
         if (this.checked) {
@@ -563,7 +674,7 @@ function buildWorkoutContents(workoutObject) {
           workoutRow.style.textDecoration = "line-through"
           deleterow.innerText = "Delete?"
           deleterow.col
-          deleterow.colSpan = "2"
+          deleterow.colSpan = "3"
           workoutRow.after(deleteRowSection)
         } 
         else if (!this.checked) {
@@ -770,7 +881,7 @@ async function getCardioEntriesByUserAndDate(userID, date) {
 
 async function updateCardioEntry(cardioUpdateObject, id) {
   const URL = `${serverURL}/cardio/update${id}`;
-
+  // console.log(cardioUpdateObject, id)
   const res = await fetch(URL, {
     method: "PATCH",
     mode: "cors",
@@ -778,10 +889,11 @@ async function updateCardioEntry(cardioUpdateObject, id) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ updateInfo: cardioUpdateObject }),
-    // token: sessionStorage.token,
+    token: sessionStorage.token,
   });
   const data = await res.json();
   console.log(data);
+  createDataObject(sessionStorage.userID, focusedDate)
 }
 
 async function deleteCardioEntry(cardioEntryID) {
@@ -794,7 +906,8 @@ async function deleteCardioEntry(cardioEntryID) {
     token: sessionStorage.token,
   });
   const data = await res.json();
-  console.log(data);
+  // console.log(data);
+  await createDataObject(sessionStorage.userID, focusedDate);
 }
 
 const cardioUpdateObject = JSON.stringify({
@@ -899,6 +1012,7 @@ async function deleteWorkoutEntry(workoutEntryID) {
   });
   const data = await res.json();
   console.log(data);
+  await createDataObject(sessionStorage.userID, focusedDate);
 }
 
 const workoutUpdateObject = JSON.stringify({
@@ -1046,16 +1160,16 @@ async function createDataObject(userID, date) {
     user: { data: [] },
   };
 
-  console.log("fetching workout data...");
+  // console.log("fetching workout data...");
   const workoutData = await getWorkoutEntriesByUserAndDate(userID, date);
   const workoutArray = await workoutData.getWorkoutRecords;
-  console.log("workoutArray: ", workoutArray);
+  // console.log("workoutArray: ", workoutArray);
 
-  console.log("fetching cardio data...");
+  // console.log("fetching cardio data...");
   const cardioData = await getCardioEntriesByUserAndDate(userID, date);
   const cardioArray = await cardioData.getCardioRecords;
 
-  console.log("cardioArray: ", cardioArray);
+  // console.log("cardioArray: ", cardioArray);
   const mealsData = await getMealsEntriesByUserAndDate(userID, date);
   const mealsDataArray = await mealsData.getMealsRecords;
 
@@ -1069,7 +1183,7 @@ async function createDataObject(userID, date) {
 }
 
 function fillMenuContents(object) {
-  console.log(object);
+  // console.log(object);
 
   //! Workout
   buildWorkoutContents(object.workout);

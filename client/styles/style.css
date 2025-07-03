@@ -200,16 +200,21 @@ display: flex;
   text-align: center;
 }
 
-.workoutDeleteRowButtons{
+.workoutDeleteRowButtons, .cardioDeleteRowButtons{
   background-color: red;
   border: 1px solid black;
   border-radius: .5em;
 }
 
-.workoutDeleteRowButtons:hover {
+.workoutDeleteRowButtons:hover, .cardioDeleteRowButtons:hover {
   background-color: gray;
+  color: white;
 }
 
-.workoutDeleteRowButtons:active{
+.workoutDeleteRowButtons:active, .cardioDeleteRowButtons:active{
   background-color: red;
+}
+
+.cardioNames, .cardioMachines, .cardioLengths{
+  text-indent: 1em;
 }
