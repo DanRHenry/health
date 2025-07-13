@@ -1219,11 +1219,11 @@ function openMealsIngredientsInputDropdownSection() {
     .addEventListener("click", closeMealsIngredientsInputDropdownSection);
   document.getElementById("mealsIngredientsInputDropdownBtn").style.transform =
     "initial";
-  document
-    .getElementById("mealsTable")
-    .childNodes[1].after(
-      document.getElementById("mealsIngredientsInputDropdown")
-    );
+  // document
+  //   .getElementById("mealsTable")
+  //   .childNodes[1].after(
+  //     document.getElementById("mealsIngredientsInputDropdown")
+  //   );
 
   // mealsIngredientsInputDropdown.style.height = "30vh"
   console.log("clicked");
