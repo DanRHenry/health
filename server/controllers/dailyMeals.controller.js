@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Meals = require("../models/meals.model");
+const DailyMeals = require("../models/dailyMeals.model");
 
 const serverError = (res, error) => {
   console.log("Server-side error", error.message);
@@ -8,14 +8,14 @@ const serverError = (res, error) => {
   });
 };
 
-//!Create Meals Entry
+//!Create DailyMeals Entry
 router.post("/create", async (req, res) => {
   const { mealTime, calories, protein, sugars, date, userID, mealName } =
     req.body;
 
   try {
     console.log(req.body);
-    const meals = new Meals({
+    const meals = new DailyMeals({
       mealName: mealName,
       mealTime: mealTime,
       calories: calories,
@@ -25,7 +25,7 @@ router.post("/create", async (req, res) => {
       userID: userID,
     });
 
-    const checkForExistingMealsEntry = await Meals.findOne(
+    const checkForExistingMealsEntry = await DailyMeals.findOne(
       {
         mealName: mealName,
         userID: userID
@@ -34,14 +34,14 @@ router.post("/create", async (req, res) => {
 
     if (checkForExistingMealsEntry) {
       res.status(200).json({
-        message: "Meals Entry Already There",
+        message: "DailyMeals Entry Already There",
       });
     } else {
       const newMeals = await meals.save();
 
       res.status(200).json({
         newMeals: newMeals,
-        message: "Success! New Meals Entry Created!",
+        message: "Success! New DailyMeals Entry Created!",
       });
     }
   } catch (err) {
@@ -53,8 +53,8 @@ router.post("/create", async (req, res) => {
 router.get("/findbyuser:userID", async (req, res)=> {
   try {
     const {userID} = req.params;
-    const findmeals = await Meals.find({
-      userID: userID,
+    const findmeals = await DailyMeals.find({
+      userID: userID
     })
     let mealNames = []
     for (let i = 0; i < findmeals.length; i++) {
@@ -74,12 +74,12 @@ router.get("/findbyuser:userID", async (req, res)=> {
   }
 })
 
-//!Find a Meals Entry
+//!Find a DailyMeals Entry
 router.get("/findone:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    const findMealsRecord = await Meals.findOne({
+    const findMealsRecord = await DailyMeals.findOne({
       _id: id,
     });
 
@@ -89,18 +89,18 @@ router.get("/findone:id", async (req, res) => {
           findMealsRecord,
         })
       : res.status(404).json({
-          message: `No Meals Record Found.`,
+          message: `No DailyMeals Record Found.`,
         });
   } catch (err) {
     serverError(res, err);
   }
 });
 
-//!Find Meals Entries by date
+//!Find DailyMeals Entries by date
 router.get("/find:userID/:date", async (req, res) => {
   try {
     const { userID, date } = req.params;
-    const getMealsRecords = await Meals.find({
+    const getMealsRecords = await DailyMeals.find({
       date: date,
       userID: userID,
     });
@@ -117,13 +117,13 @@ router.get("/find:userID/:date", async (req, res) => {
   }
 });
 
-//!Update Meals Entry without an ID
+//!Update DailyMeals Entry without an ID
 router.patch("/update", async (req, res) => {
   try {
     const { updateInfo } = req.body;
     const mealName = updateInfo.mealName;
     const userID = updateInfo.userID
-    const record = await Meals.findOne({ mealName: mealName,
+    const record = await DailyMeals.findOne({ mealName: mealName,
     userID: userID
      });
      
@@ -137,7 +137,7 @@ router.patch("/update", async (req, res) => {
     // This makes sure the information has been updated before returning
     const returnOption = { new: true };
 
-    const updateMealsRecord = await Meals.findOneAndUpdate(
+    const updateMealsRecord = await DailyMeals.findOneAndUpdate(
       {_id: record._id},
       updateInfo,
       returnOption
@@ -145,7 +145,7 @@ router.patch("/update", async (req, res) => {
 
     updateMealsRecord
       ? res.status(200).json({
-          message: "Meals entry has been updated successfully.",
+          message: "DailyMeals entry has been updated successfully.",
           updateMealsRecord,
         })
       : res.status(520).json({
@@ -158,11 +158,11 @@ router.patch("/update", async (req, res) => {
 });
 
 
-//!Update Meals Entry by ID //todo finish
+//!Update DailyMeals Entry by ID //todo finish
 // router.patch("/update:mealsEntryID", async (req, res) => {
 //   try {
 //     const { mealsEntryID } = req.params;
-//     const record = await Meals.findOne({ _id: mealsEntryID });
+//     const record = await DailyMeals.findOne({ _id: mealsEntryID });
 //     const { updateInfo } = req.body;
 
 //     if (!record) {
@@ -174,7 +174,7 @@ router.patch("/update", async (req, res) => {
 //     // This makes sure the information has been updated before returning
 //     const returnOption = { new: true };
 
-//     const updateMealsRecord = await Meals.findOneAndUpdate(
+//     const updateMealsRecord = await DailyMeals.findOneAndUpdate(
 //       { _id: mealsEntryID },
 //       JSON.parse(updateInfo),
 //       returnOption
@@ -182,7 +182,7 @@ router.patch("/update", async (req, res) => {
 
 //     updateMealsRecord
 //       ? res.status(200).json({
-//           message: "Meals entry has been updated successfully.",
+//           message: "DailyMeals entry has been updated successfully.",
 //           updateMealsRecord,
 //         })
 //       : res.status(520).json({
@@ -193,22 +193,22 @@ router.patch("/update", async (req, res) => {
 //   }
 // });
 
-//!Delete a Meals Entry
+//!Delete a DailyMeals Entry
 router.delete("/delete:mealsID", async (req, res) => {
   try {
     const { mealsID } = req.params;
     // console.log(mealsID)
 
-    const deleteMealsItem = await Meals.deleteOne({
+    const deleteMealsItem = await DailyMeals.deleteOne({
       _id: mealsID,
     });
 
     deleteMealsItem.deletedCount === 1
       ? res.status(200).json({
-          message: "Meals entry was deleted.",
+          message: "DailyMeals entry was deleted.",
         })
       : res.status(404).json({
-          message: "Meals entry was not found or deleted.",
+          message: "DailyMeals entry was not found or deleted.",
         });
   } catch (err) {
     serverError(err);
@@ -221,7 +221,7 @@ router.get("/find/:id/:mealName", async (req, res) => {
     // console.log(req.params)
     const { id, mealName } = req.params;
     // console.log("meal ID & name: ", id, mealName);
-    const getAllMeals = await Meals.findOne({
+    const getAllMeals = await DailyMeals.findOne({
       userID: id,
       mealName: mealName,
     });
@@ -245,7 +245,7 @@ router.get("/findmealbydateandid/:id/:date", async (req, res) => {
     const { id, date } = req.params;
 
     // console.log("id & date: ",id,date)
-    const getAllMeals = await Meals.find({
+    const getAllMeals = await DailyMeals.find({
       userID: id,
       date: date,
     });

@@ -26,6 +26,9 @@ let dateDisplayInfo = `${adjustedMonth}/${today.getDate()}/${today.getFullYear()
 
 let focusedDate = `${month}${date}${today.getFullYear()}`;
 
+let allUserMeals = [];
+let mealsByDay = [];
+
 //! Page Contruction Functions
 function createMainPage() {
   if (sessionStorage.userID && sessionStorage.token) {
@@ -181,12 +184,12 @@ function createMainPage() {
 
     createDataObject(sessionStorage.userID, focusedDate);
 
-    findAllMealsEntries();
+    getAllUserMeals();
 
     //? build function calls
     buildCardioWindow();
     buildWorkoutWindow();
-    buildMealsWindow()
+    buildMealsWindow();
     // buildRoutinesWindow()
   }
 }
@@ -211,7 +214,6 @@ function buildMealsWindow() {
 
   prevNextSection.after(mealsSectionTop);
   mealsSectionTop.after(mealsSection);
-  // buildMealsContents();
 }
 
 // function buildRoutinesWindow() {
@@ -403,7 +405,7 @@ function buildWorkoutWindow() {
 //           deleterow.col
 //           deleterow.colSpan = "3"
 //           routinesRow.after(deleteRowSection)
-//         } 
+//         }
 //         else if (!this.checked) {
 //           routinesRow.style.textDecoration = null;
 //           console.log("i",i)
@@ -516,10 +518,11 @@ function buildWorkoutWindow() {
 // }
 
 function buildMealsContents(mealsObject) {
+  // console.log("mealsObject: ", mealsObject);
   // console.log("bird")
   mealsSection.innerHTML = "";
   const mealsTable = document.createElement("table");
-  mealsTable.id = "mealsTable"
+  mealsTable.id = "mealsTable";
 
   const mealsRow = document.createElement("tr");
 
@@ -527,29 +530,15 @@ function buildMealsContents(mealsObject) {
   mealsCheckHeader.innerText = "Select";
   mealsCheckHeader.className = "mealsHeaders";
 
-  const mealsDateHeader = document.createElement("th");
-  mealsDateHeader.innerText = "Date";
-  mealsDateHeader.className = "mealsHeaders";
-
   const mealsNameHeader = document.createElement("th");
   mealsNameHeader.innerText = "Name";
   mealsNameHeader.className = "mealsHeaders";
 
-  const mealsMachineHeader = document.createElement("th");
-  mealsMachineHeader.innerText = "Machine";
-  mealsMachineHeader.className = "mealsHeaders";
+  const mealsIngredientsHeader = document.createElement("th");
+  mealsIngredientsHeader.innerText = "Ingredients";
+  mealsIngredientsHeader.className = "mealsHeaders";
 
-  const mealsLengthHeader = document.createElement("th");
-  mealsLengthHeader.innerText = "Length";
-  mealsLengthHeader.className = "mealsHeaders";
-
-  mealsRow.append(
-    mealsCheckHeader,
-    // mealsDateHeader,
-    mealsNameHeader,
-    mealsMachineHeader,
-    mealsLengthHeader
-  );
+  mealsRow.append(mealsCheckHeader, mealsNameHeader, mealsIngredientsHeader);
   //---------------------------
   const mealsInputRow = document.createElement("tr");
 
@@ -561,53 +550,53 @@ function buildMealsContents(mealsObject) {
   mealsNameInputLocation.id = "mealsNameInputLocation";
   mealsNameInputLocation.name = "mealsNameInputLocation";
 
-
   const mealsNameInput = document.createElement("input");
   mealsNameInput.type = "text";
-  mealsNameInput.setAttribute("list", "mealsNameInputDropdown")
+  mealsNameInput.setAttribute("list", "mealsNameInputDropdown");
   mealsNameInput.id = "mealsNameInput";
   mealsNameInput.name = "mealsNameInput";
   mealsNameInput.spellcheck = "false";
   mealsNameInput.addEventListener("keydown", handleMealsInputClick);
+  mealsNameInput.addEventListener("change", handleMealsInputChange);
 
-  const mealsNameInputDropdown = document.createElement("datalist")
-  mealsNameInputDropdown.id = "mealsNameInputDropdown"
+  const mealsNameInputDropdown = document.createElement("datalist");
+  mealsNameInputDropdown.id = "mealsNameInputDropdown";
 
-  const mealsNameInputDropdownListItem = document.createElement("option")
-  mealsNameInputDropdownListItem.value = "meal option 1"
-  mealsNameInputDropdownListItem.innerText = "meal option 1"
+  for (let i = 0; i < allUserMeals.length; i++) {
+    const mealsNameInputDropdownListItem = document.createElement("option");
+    mealsNameInputDropdownListItem.value = allUserMeals[i];
+    mealsNameInputDropdownListItem.innerText = allUserMeals[i];
+    mealsNameInputDropdown.append(mealsNameInputDropdownListItem);
+  }
 
-  mealsNameInputDropdown.append(mealsNameInputDropdownListItem)
-  mealsNameInput.append(mealsNameInputDropdown)
+  mealsNameInput.append(mealsNameInputDropdown);
 
-  mealsNameInputLocation.append(mealsNameInput)
+  mealsNameInputLocation.append(mealsNameInput);
 
-  const mealsMachineInputLocation = document.createElement("td");
-  mealsMachineInputLocation.id = "mealsMachineInputLocation";
-  mealsMachineInputLocation.name = "mealsMachineInputLocation";
-  const mealsMachineInput = document.createElement("input");
-  mealsMachineInput.id = `mealsMachineInput`;
-  mealsMachineInput.spellcheck = "false";
-  mealsMachineInput.addEventListener("keydown", handleMealsInputClick);
-  mealsMachineInputLocation.appendChild(mealsMachineInput);
+  const mealsIngredientsInputLocation = document.createElement("td");
+  mealsIngredientsInputLocation.id = "mealsIngredientsInputLocation";
+  mealsIngredientsInputLocation.name = "mealsIngredientsInputLocation";
 
-  const mealsLengthInputLocation = document.createElement("td");
-  mealsLengthInputLocation.id = "mealsLengthInputLocation";
-  mealsLengthInputLocation.name = "mealsLengthInputLocation";
-  const mealsLengthInput = document.createElement("input");
-  mealsLengthInput.id = "mealsLengthInput";
-  mealsLengthInput.spellcheck = "false";
-  mealsLengthInput.type = "number"
-  mealsLengthInput.min = "0"
-  mealsLengthInput.addEventListener("keypress", handleMealsInputClick);
-  mealsLengthInputLocation.appendChild(mealsLengthInput);
+  const mealsIngredientsInputDropdown = document.createElement("div");
+  mealsIngredientsInputDropdown.id = "mealsIngredientsInputDropdown";
+
+  const mealsIngredientsInputDropdownBtn = document.createElement("button");
+  mealsIngredientsInputDropdownBtn.id = "mealsIngredientsInputDropdownBtn";
+  mealsIngredientsInputDropdownBtn.innerText = "^";
+  mealsIngredientsInputDropdownBtn.addEventListener(
+    "click",
+    openMealsIngredientsInputDropdownSection
+  );
+
+  mealsIngredientsInputLocation.append(mealsIngredientsInputDropdownBtn);
 
   mealsInputRow.append(
     mealsInputBtn,
-    // mealsNameInput,
     mealsNameInputLocation,
-    mealsMachineInputLocation,
-    mealsLengthInputLocation
+    mealsIngredientsInputLocation
+    // mealsCaloriesInputLocation,
+    // mealsProteinInputLocation,
+    // mealsSugarsInputLocation
   );
   //------------------------
   mealsTable.append(mealsRow, mealsInputRow);
@@ -615,16 +604,16 @@ function buildMealsContents(mealsObject) {
   mealsSection.append(mealsTable);
 
   if (mealsObject) {
+    console.log("mealsObject: ", mealsObject);
     //-------------------------------
     for (let i = 0; i < mealsObject.length; i++) {
-      let year = Number(mealsObject[i].dateCreated.slice(4));
-      const date = Number(mealsObject[i].dateCreated.slice(2, 4));
+      let year = Number(mealsObject[i].date.slice(4));
+      const date = Number(mealsObject[i].date.slice(2, 4));
 
-      const month = Number(mealsObject[i].dateCreated.slice(0, 2));
+      const month = Number(mealsObject[i].date.slice(0, 2));
+      console.log(mealsObject[i]);
       const dateText = `${month}/${date}/${year}`;
-      const nameText = mealsObject[i].exerciseName;
-      const machineText = mealsObject[i].machine;
-      const lengthText = `${mealsObject[i].duration} min`;
+      const nameText = mealsObject[i].mealName;
 
       const mealsRow = document.createElement("tr");
       mealsRow.className = "mealsRows";
@@ -634,35 +623,36 @@ function buildMealsContents(mealsObject) {
       checkBox.className = "mealsCheckboxes";
       checkBox.id = `mealsCheckbox${i}`;
       checkBox.addEventListener("change", function () {
-        const deleteRowSection = document.createElement("tr")
-        deleteRowSection.id = `deleteMealsRowSection_${i}`
+        const deleteRowSection = document.createElement("tr");
+        deleteRowSection.id = `deleteMealsRowSection_${i}`;
         deleteRowSection.className = "deleteRows mealsRows";
-        const spacer = document.createElement("td")
-        spacer.style.backgroundColor = "initial"
-        const deleterow = document.createElement("td")
+        const spacer = document.createElement("td");
+        spacer.style.backgroundColor = "initial";
+        const deleterow = document.createElement("td");
         // deleterow.id = `mealsDeleteRow_${i}`
-        deleterow.className = "mealsDeleteRowButtons"
+        deleterow.className = "mealsDeleteRowButtons";
         deleterow.addEventListener("click", () => {
           // console.log(mealsObject[i])
-          deleteMealsEntry(mealsObject[i]._id)
-        })
-        deleteRowSection.append(spacer,deleterow)
+          deleteMealsEntry(mealsObject[i]._id);
+        });
+        deleteRowSection.append(spacer, deleterow);
 
         if (this.checked) {
           // mealsRow.style.backgroundColor = "red"
-          mealsRow.style.textDecoration = "line-through"
-          deleterow.innerText = "Delete?"
-          deleterow.col
-          deleterow.colSpan = "3"
-          mealsRow.after(deleteRowSection)
-        } 
-        else if (!this.checked) {
+          mealsRow.style.textDecoration = "line-through";
+          deleterow.innerText = "Delete?";
+          deleterow.col;
+          deleterow.colSpan = "3";
+          mealsRow.after(deleteRowSection);
+        } else if (!this.checked) {
           mealsRow.style.textDecoration = null;
-          console.log("i",i)
-          const deleteRowSection = document.getElementById(`deleteMealsRowSection_${i}`)
-          deleteRowSection.remove()
+          console.log("i", i);
+          const deleteRowSection = document.getElementById(
+            `deleteMealsRowSection_${i}`
+          );
+          deleteRowSection.remove();
         }
-      })
+      });
 
       const mealsDate = document.createElement("td");
       mealsDate.innerText = dateText;
@@ -672,19 +662,20 @@ function buildMealsContents(mealsObject) {
       mealsName.innerText = nameText;
       mealsName.className = "mealsNames";
 
-      const mealsMachine = document.createElement("td");
-      mealsMachine.innerText = machineText;
-      mealsMachine.className = "mealsMachines";
+      // const
+      // const mealsCalories = document.createElement("td");
+      // mealsCalories.innerText = machineText;
+      // mealsCalories.className = "mealsCalories";
 
-      const mealsLength = document.createElement("td");
-      mealsLength.innerText = lengthText;
-      mealsLength.className = "mealsLengths";
+      // const mealsLength = document.createElement("td");
+      // mealsLength.innerText = lengthText;
+      // mealsLength.className = "mealsLengths";
       mealsRow.append(
         checkBox,
         // mealsDate,
-        mealsName,
-        mealsMachine,
-        mealsLength
+        mealsName
+        // mealsCalories,
+        // mealsLength
       );
       mealsTable.append(mealsRow);
     }
@@ -794,35 +785,36 @@ function buildCardioContents(cardioObject) {
       checkBox.id = `cardioCheckbox${i}`;
 
       checkBox.addEventListener("change", function () {
-        const deleteRowSection = document.createElement("tr")
-        deleteRowSection.id = `deleteCardioRowSection_${i}`
+        const deleteRowSection = document.createElement("tr");
+        deleteRowSection.id = `deleteCardioRowSection_${i}`;
         deleteRowSection.className = "deleteRows cardioRows";
-        const spacer = document.createElement("td")
-        spacer.style.backgroundColor = "initial"
-        const deleterow = document.createElement("td")
+        const spacer = document.createElement("td");
+        spacer.style.backgroundColor = "initial";
+        const deleterow = document.createElement("td");
         // deleterow.id = `cardioDeleteRow_${i}`
-        deleterow.className = "cardioDeleteRowButtons"
+        deleterow.className = "cardioDeleteRowButtons";
         deleterow.addEventListener("click", () => {
           // console.log(cardioObject[i])
-          deleteCardioEntry(cardioObject[i]._id)
-        })
-        deleteRowSection.append(spacer,deleterow)
+          deleteCardioEntry(cardioObject[i]._id);
+        });
+        deleteRowSection.append(spacer, deleterow);
 
         if (this.checked) {
           // cardioRow.style.backgroundColor = "red"
-          cardioRow.style.textDecoration = "line-through"
-          deleterow.innerText = "Delete?"
-          deleterow.col
-          deleterow.colSpan = "3"
-          cardioRow.after(deleteRowSection)
-        } 
-        else if (!this.checked) {
+          cardioRow.style.textDecoration = "line-through";
+          deleterow.innerText = "Delete?";
+          deleterow.col;
+          deleterow.colSpan = "3";
+          cardioRow.after(deleteRowSection);
+        } else if (!this.checked) {
           cardioRow.style.textDecoration = null;
-          console.log("i",i)
-          const deleteRowSection = document.getElementById(`deleteCardioRowSection_${i}`)
-          deleteRowSection.remove()
+          console.log("i", i);
+          const deleteRowSection = document.getElementById(
+            `deleteCardioRowSection_${i}`
+          );
+          deleteRowSection.remove();
         }
-      })
+      });
 
       const cardioDate = document.createElement("td");
       cardioDate.innerText = dateText;
@@ -831,88 +823,88 @@ function buildCardioContents(cardioObject) {
       const cardioName = document.createElement("td");
       cardioName.innerText = nameText;
       cardioName.className = "cardioNames";
-      cardioName.addEventListener("click", handleCardioNameClick)
+      cardioName.addEventListener("click", handleCardioNameClick);
 
-      async function handleCardioNameClick () {
-        cardioName.removeEventListener("click", handleCardioNameClick)
-        const cardioNameInput = document.createElement("input")
-        cardioNameInput.placeholder = cardioName.innerText
-        cardioName.innerText = null
-        cardioName.appendChild(cardioNameInput)
-        cardioNameInput.focus()
+      async function handleCardioNameClick() {
+        cardioName.removeEventListener("click", handleCardioNameClick);
+        const cardioNameInput = document.createElement("input");
+        cardioNameInput.placeholder = cardioName.innerText;
+        cardioName.innerText = null;
+        cardioName.appendChild(cardioNameInput);
+        cardioNameInput.focus();
         cardioNameInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter" && cardioNameInput.value !== null) {
             const updateObject = {
-              exerciseName: cardioNameInput.value
-            }
-            updateCardioEntry(updateObject, cardioObject[i]._id)
+              exerciseName: cardioNameInput.value,
+            };
+            updateCardioEntry(updateObject, cardioObject[i]._id);
 
-            console.log(sessionStorage.userID)
-            console.log(focusedDate)
+            console.log(sessionStorage.userID);
+            console.log(focusedDate);
 
             // createDataObject(sessionStorage.userID, focusedDate);
             // createDataObject(userID, date)
-            buildCardioContents(object.cardioObject)
+            buildCardioContents(object.cardioObject);
           }
-        })
+        });
       }
 
       const cardioMachine = document.createElement("td");
       cardioMachine.innerText = machineText;
       cardioMachine.className = "cardioMachines";
-      cardioMachine.addEventListener("click", handleCardioMachineClick)
+      cardioMachine.addEventListener("click", handleCardioMachineClick);
 
-      async function handleCardioMachineClick () {
-        cardioMachine.removeEventListener("click", handleCardioMachineClick)
-        const cardioMachineInput = document.createElement("input")
-        cardioMachineInput.placeholder = cardioMachine.innerText
-        cardioMachine.innerText = null
-        cardioMachine.appendChild(cardioMachineInput)
-        cardioMachineInput.focus()
+      async function handleCardioMachineClick() {
+        cardioMachine.removeEventListener("click", handleCardioMachineClick);
+        const cardioMachineInput = document.createElement("input");
+        cardioMachineInput.placeholder = cardioMachine.innerText;
+        cardioMachine.innerText = null;
+        cardioMachine.appendChild(cardioMachineInput);
+        cardioMachineInput.focus();
         cardioMachineInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter" && cardioMachineInput.value !== null) {
             const updateObject = {
-              machine: cardioMachineInput.value
-            }
-            updateCardioEntry(updateObject, cardioObject[i]._id)
+              machine: cardioMachineInput.value,
+            };
+            updateCardioEntry(updateObject, cardioObject[i]._id);
 
-            console.log(sessionStorage.userID)
-            console.log(focusedDate)
+            console.log(sessionStorage.userID);
+            console.log(focusedDate);
 
             // createDataObject(sessionStorage.userID, focusedDate);
             // createDataObject(userID, date)
-            buildCardioContents(object.cardioObject)
+            buildCardioContents(object.cardioObject);
           }
-        })
+        });
       }
 
       const cardioLength = document.createElement("td");
       cardioLength.innerText = lengthText;
       cardioLength.className = "cardioLengths";
-      cardioLength.addEventListener("click", handleCardioLengthClick)
+      cardioLength.addEventListener("click", handleCardioLengthClick);
 
-      async function handleCardioLengthClick () {
-        cardioLength.removeEventListener("click", handleCardioLengthClick)
-        const cardioLengthInput = document.createElement("input")
-        cardioLengthInput.placeholder = cardioLength.innerText
-        cardioLength.innerText = null
-        cardioLength.appendChild(cardioLengthInput)
-        cardioLengthInput.focus()
+      async function handleCardioLengthClick() {
+        cardioLength.removeEventListener("click", handleCardioLengthClick);
+        const cardioLengthInput = document.createElement("input");
+        cardioLengthInput.placeholder = cardioLength.innerText;
+        cardioLength.innerText = null;
+        cardioLength.appendChild(cardioLengthInput);
+        cardioLengthInput.focus();
         cardioLengthInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter" && cardioLengthInput.value !== null) {
             const updateObject = {
-              duration: cardioLengthInput.value
-            }
-            updateCardioEntry(updateObject, cardioObject[i]._id)
+              duration: cardioLengthInput.value,
+            };
+            updateCardioEntry(updateObject, cardioObject[i]._id);
 
-            console.log(sessionStorage.userID)
-            console.log(focusedDate)
+            console.log(sessionStorage.userID);
+            console.log(focusedDate);
 
             // createDataObject(sessionStorage.userID, focusedDate);
             // createDataObject(userID, date)
-            buildCardioContents(object.cardioObject)
+            buildCardioContents(object.cardioObject);
           }
-        })
+        });
       }
 
       cardioRow.append(
@@ -931,7 +923,7 @@ function buildWorkoutContents(workoutObject) {
   // console.log("bird")
   workoutSection.innerHTML = "";
   const workoutTable = document.createElement("table");
-  workoutTable.id = "workoutTable"
+  workoutTable.id = "workoutTable";
 
   const workoutRow = document.createElement("tr");
 
@@ -993,8 +985,8 @@ function buildWorkoutContents(workoutObject) {
   const workoutLengthInput = document.createElement("input");
   workoutLengthInput.id = "workoutLengthInput";
   workoutLengthInput.spellcheck = "false";
-  workoutLengthInput.type = "number"
-  workoutLengthInput.min = "0"
+  workoutLengthInput.type = "number";
+  workoutLengthInput.min = "0";
   workoutLengthInput.addEventListener("keypress", handleWorkoutInputClick);
   workoutLengthInputLocation.appendChild(workoutLengthInput);
 
@@ -1029,35 +1021,36 @@ function buildWorkoutContents(workoutObject) {
       checkBox.className = "workoutCheckboxes";
       checkBox.id = `workoutCheckbox${i}`;
       checkBox.addEventListener("change", function () {
-        const deleteRowSection = document.createElement("tr")
-        deleteRowSection.id = `deleteWorkoutRowSection_${i}`
+        const deleteRowSection = document.createElement("tr");
+        deleteRowSection.id = `deleteWorkoutRowSection_${i}`;
         deleteRowSection.className = "deleteRows workoutRows";
-        const spacer = document.createElement("td")
-        spacer.style.backgroundColor = "initial"
-        const deleterow = document.createElement("td")
+        const spacer = document.createElement("td");
+        spacer.style.backgroundColor = "initial";
+        const deleterow = document.createElement("td");
         // deleterow.id = `workoutDeleteRow_${i}`
-        deleterow.className = "workoutDeleteRowButtons"
+        deleterow.className = "workoutDeleteRowButtons";
         deleterow.addEventListener("click", () => {
           // console.log(workoutObject[i])
-          deleteWorkoutEntry(workoutObject[i]._id)
-        })
-        deleteRowSection.append(spacer,deleterow)
+          deleteWorkoutEntry(workoutObject[i]._id);
+        });
+        deleteRowSection.append(spacer, deleterow);
 
         if (this.checked) {
           // workoutRow.style.backgroundColor = "red"
-          workoutRow.style.textDecoration = "line-through"
-          deleterow.innerText = "Delete?"
-          deleterow.col
-          deleterow.colSpan = "3"
-          workoutRow.after(deleteRowSection)
-        } 
-        else if (!this.checked) {
+          workoutRow.style.textDecoration = "line-through";
+          deleterow.innerText = "Delete?";
+          deleterow.col;
+          deleterow.colSpan = "3";
+          workoutRow.after(deleteRowSection);
+        } else if (!this.checked) {
           workoutRow.style.textDecoration = null;
-          console.log("i",i)
-          const deleteRowSection = document.getElementById(`deleteWorkoutRowSection_${i}`)
-          deleteRowSection.remove()
+          console.log("i", i);
+          const deleteRowSection = document.getElementById(
+            `deleteWorkoutRowSection_${i}`
+          );
+          deleteRowSection.remove();
         }
-      })
+      });
 
       const workoutDate = document.createElement("td");
       workoutDate.innerText = dateText;
@@ -1199,14 +1192,13 @@ async function handleSubmitSignUp(e) {
 function toggleMealsSectionMenu() {
   if (!mealsSection.style.minHeight) {
     mealsSection.style.maxHeight = null;
-    mealsSection.style.minHeight = "30vh";
+    // mealsSection.style.minHeight = "30vh";
     mealsSection.style.height = "fit-content";
   } else {
-    mealsSection.style.minHeight = null;
-    mealsSection.style.maxHeight = 0;
+    // mealsSection.style.minHeight = null;
+    // mealsSection.style.maxHeight = 0;
   }
 }
-
 
 // function toggleRoutinesSectionMenu() {
 //   if (!routinesSection.style.minHeight) {
@@ -1218,6 +1210,86 @@ function toggleMealsSectionMenu() {
 //     routinesSection.style.maxHeight = 0;
 //   }
 // }
+function openMealsIngredientsInputDropdownSection() {
+  document
+    .getElementById("mealsIngredientsInputDropdownBtn")
+    .removeEventListener("click", openMealsIngredientsInputDropdownSection);
+  document
+    .getElementById("mealsIngredientsInputDropdownBtn")
+    .addEventListener("click", closeMealsIngredientsInputDropdownSection);
+  document.getElementById("mealsIngredientsInputDropdownBtn").style.transform =
+    "initial";
+  document
+    .getElementById("mealsTable")
+    .childNodes[1].after(
+      document.getElementById("mealsIngredientsInputDropdown")
+    );
+
+  // mealsIngredientsInputDropdown.style.height = "30vh"
+  console.log("clicked");
+  const mealsIngredientsSection = document.createElement("div");
+  mealsIngredientsSection.id = "mealsIngredientsSection";
+
+  const mealTimeRow = document.createElement("div");
+  mealTimeRow.className = "ingredientInputLabels";
+  const mealTimeLabel = document.createElement("span");
+  mealTimeLabel.innerText = "Meal Time: ";
+  const mealTimeInput = document.createElement("input");
+  mealTimeInput.addEventListener("keydown", handleMealsInputClick);
+  mealTimeInput.id = "mealTimeInput";
+  mealTimeRow.append(mealTimeLabel, mealTimeInput);
+
+  const caloriesRow = document.createElement("div");
+  caloriesRow.className = "ingredientInputLabels";
+  const caloriesLabel = document.createElement("span");
+  caloriesLabel.innerText = "Calories: ";
+  const caloriesInput = document.createElement("input");
+  caloriesInput.addEventListener("keydown", handleMealsInputClick);
+  caloriesInput.id = "caloriesInput";
+  caloriesRow.append(caloriesLabel, caloriesInput);
+
+  const proteinRow = document.createElement("div");
+  proteinRow.className = "ingredientInputLabels";
+  const proteinLabel = document.createElement("span");
+  proteinLabel.innerText = "Protein: ";
+  const proteinInput = document.createElement("input");
+  proteinInput.id = "proteinInput";
+  proteinInput.addEventListener("keydown", handleMealsInputClick);
+  proteinRow.append(proteinLabel, proteinInput);
+
+  const sugarsRow = document.createElement("div");
+  sugarsRow.className = "ingredientInputLabels";
+  const sugarsLabel = document.createElement("span");
+  sugarsLabel.innerText = "Sugars: ";
+  const sugarsInput = document.createElement("input");
+  sugarsInput.id = "sugarsInput";
+  sugarsInput.addEventListener("keydown", handleMealsInputClick);
+  sugarsRow.append(sugarsLabel, sugarsInput);
+
+  mealsIngredientsSection.append(
+    mealTimeRow,
+    caloriesRow,
+    proteinRow,
+    sugarsRow
+  );
+
+  mealsTable.after(mealsIngredientsSection);
+}
+
+function closeMealsIngredientsInputDropdownSection() {
+  "mealsIngredientsInputDropdownBtn".removeEventListener(
+    "click",
+    closeMealsIngredientsInputDropdownSection
+  );
+  document
+    .getElementById("mealsIngredientsInputDropdownBtn")
+    .addEventListener("click", openMealsIngredientsInputDropdownSection);
+  // mealsIngredientsInputDropdown.style.height = "0"
+  document.getElementById("mealsIngredientsInputDropdownBtn").style.transform =
+    null;
+  // console.log("clicked")
+  mealsIngredientsSection.remove();
+}
 
 function toggleCardioSectionMenu() {
   if (!cardioSection.style.minHeight) {
@@ -1262,26 +1334,104 @@ function toggleWorkoutSectionMenu() {
 //   }
 // }
 
+async function handleMealsInputChange() {
+  console.log(allUserMeals);
+  console.log(mealsNameInput.value);
+
+  for (let i = 0; i < allUserMeals.length; i++) {
+    if (allUserMeals[i] === mealsNameInput.value) {
+      console.log("match");
+      const mealData = await findMealEntryByMealNameAndUserID(
+        mealsNameInput.value
+      );
+      // console.log("mealData: ", mealData);
+      const mealInfo = mealData.getAllMeals;
+      if (!document.getElementById("mealsIngredientsSection")) {
+        openMealsIngredientsInputDropdownSection();
+      }
+
+      document.getElementById("mealTimeInput").value = mealInfo.mealTime;
+      document.getElementById("caloriesInput").value = mealInfo.calories;
+      document.getElementById("proteinInput").value = mealInfo.protein;
+      document.getElementById("sugarsInput").value = mealInfo.sugars;
+    } else {
+      console.log(mealsNameInput.value);
+
+      //fetch the meal matching meal name and person id. Then update ingredient fields
+    }
+  }
+  getAllUserMeals();
+      // buildMealsWindow();
+
+}
+
 async function handleMealsInputClick(e) {
-  // console.log(e.key)
   if (e.key !== "Enter") {
     return;
   }
+  const mealsNameInput = document.getElementById("mealsNameInput").value;
 
-  const mealsName = document.getElementById("mealsNameInput").value;
+  const mealTimeInput = document.getElementById("mealTimeInput").value;
 
-  const mealsMachine = document.getElementById("mealsMachineInput").value;
+  const caloriesInput = document.getElementById("caloriesInput").value;
 
-  const mealsLength = document.getElementById("mealsLengthInput").value;
+  const proteinInput = document.getElementById("proteinInput").value;
 
-  // console.log("clicked", mealsName, mealsMachine, mealsLength);
+  const sugarsInput = document.getElementById("sugarsInput").value;
 
-  if (mealsName && mealsMachine && mealsLength) {
-    console.log("new meals: ",mealsName, mealsMachine, mealsLength)
-    await createMealsEntry(mealsName, mealsMachine, mealsLength);
+  for (let i = 0; i < allUserMeals.length; i++) {
+    if (allUserMeals[i] === document.getElementById("mealsNameInput").value) {
+      console.log("match");
+      const updateConfirmationLine = document.createElement("div");
+      updateConfirmationLine.id = "mealUpdateConfirmationLine";
+      updateConfirmationLine.innerText =
+        "Do you want to update the existing entry?";
+      const yesBtn = document.createElement("button");
+      yesBtn.innerText = "Yes";
+      const noBtn = document.createElement("button");
+      noBtn.innerText = "No";
+      yesBtn.addEventListener("click", () => {
+        updateMealsEntry({
+          mealName: mealsNameInput,
+          mealTime: mealTimeInput,
+          calories: caloriesInput,
+          protein: proteinInput,
+          sugars: sugarsInput,
+          userID: sessionStorage.userID,
+          date: focusedDate,
+        });
+      });
+      noBtn.addEventListener("click", () => {
+        updateConfirmationLine.remove();
+      });
+      updateConfirmationLine.append(yesBtn, noBtn);
+      if (!document.getElementById("mealUpdateConfirmationLine")) {
+        mealsSection.append(updateConfirmationLine);
+        // yesBtn.focus()
+      }
+      return;
+    }
+  }
+
+  // console.log("clicked", mealsName, mealsCalories, mealsLength);
+
+  if (
+    mealsNameInput &&
+    mealTimeInput &&
+    caloriesInput &&
+    proteinInput &&
+    sugarsInput
+  ) {
+    // console.log("new meals: ", mealsName, mealsCalories, mealsLength);
+    await createMealsEntry(
+      mealsNameInput,
+      mealTimeInput,
+      caloriesInput,
+      proteinInput,
+      sugarsInput
+    );
 
     await createDataObject(sessionStorage.userID, focusedDate);
-    
   }
 }
 
@@ -1300,7 +1450,7 @@ async function handleCardioInputClick(e) {
   // console.log("clicked", cardioName, cardioMachine, cardioLength);
 
   if (cardioName && cardioMachine && cardioLength) {
-    console.log("new cardio:",cardioName, cardioMachine, cardioLength)
+    console.log("new cardio:", cardioName, cardioMachine, cardioLength);
     await createCardioEntry(cardioName, cardioMachine, cardioLength);
     await createDataObject(sessionStorage.userID, focusedDate);
   }
@@ -1321,17 +1471,15 @@ async function handleWorkoutInputClick(e) {
   // console.log("clicked", workoutName, workoutMachine, workoutLength);
 
   if (workoutName && workoutMachine && workoutLength) {
-    console.log("new workout: ",workoutName, workoutMachine, workoutLength)
+    console.log("new workout: ", workoutName, workoutMachine, workoutLength);
     await createWorkoutEntry(workoutName, workoutMachine, workoutLength);
 
     await createDataObject(sessionStorage.userID, focusedDate);
-    
   }
 }
 
 //! Cardio CRUD functions
 async function createCardioEntry(exerciseName, machine, duration) {
-
   const cardioEntryBody = JSON.stringify({
     exerciseName: exerciseName,
     duration: duration,
@@ -1347,9 +1495,9 @@ async function createCardioEntry(exerciseName, machine, duration) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
     body: cardioEntryBody,
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1363,8 +1511,8 @@ async function getCardioEntry(id) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1380,8 +1528,8 @@ async function getCardioEntriesByUserAndDate(userID, date) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1402,13 +1550,13 @@ async function updateCardioEntry(cardioUpdateObject, id) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
     body: JSON.stringify({ updateInfo: cardioUpdateObject }),
-    token: sessionStorage.token,
   });
   const data = await res.json();
   console.log(data);
-  createDataObject(sessionStorage.userID, focusedDate)
+  createDataObject(sessionStorage.userID, focusedDate);
 }
 
 async function deleteCardioEntry(cardioEntryID) {
@@ -1417,8 +1565,9 @@ async function deleteCardioEntry(cardioEntryID) {
   const res = await fetch(URL, {
     method: "DELETE",
     mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    token: sessionStorage.token,
+    headers: { "Content-Type": "application/json", 
+    "authorization": sessionStorage.token
+    },
   });
   const data = await res.json();
   // console.log(data);
@@ -1450,9 +1599,9 @@ async function createWorkoutEntry(workoutName, machine, duration) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
     body: workoutEntryBody,
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1468,8 +1617,8 @@ async function getWorkoutEntry(id) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1486,17 +1635,18 @@ async function getWorkoutEntriesByUserAndDate(userID, date) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
 
   if (data.message != "No Records Found.") {
     // console.log("Workout Records: ",data);
-  } else {
-    console.log("Is there any Workout data?", data.message);
-  }
+  } 
+  // else {
+  //   console.log("Is there any Workout data?", data.message);
+  // }
   return data;
 }
 
@@ -1509,8 +1659,9 @@ async function updateWorkoutEntry(workoutUpdateObject, id) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ updateInfo: workoutUpdateObject }),
-    // token: sessionStorage.token,
+    body: JSON.stringify({ updateInfo: workoutUpdateObject,
+          authorization: sessionStorage.token
+     }),
   });
   const data = await res.json();
   console.log(data);
@@ -1522,8 +1673,10 @@ async function deleteWorkoutEntry(workoutEntryID) {
   const res = await fetch(URL, {
     method: "DELETE",
     mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    token: sessionStorage.token,
+    headers: { 
+      "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
+     },
   });
   const data = await res.json();
   console.log(data);
@@ -1538,17 +1691,42 @@ const workoutUpdateObject = JSON.stringify({
 //!
 
 //! Meals CRUD functions
+async function getAllUserMeals() {
+  // console.log("sessionStorage.token: ", sessionStorage.token)
+  // console.log("sessionStorage.userID: ", sessionStorage.userID)
+  const res = await fetch(
+    `${serverURL}/meals/findbyuser${sessionStorage.userID}`,
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": sessionStorage.token,
+        },
+      }
+  );
+
+  const data = await res.json();
+  console.log('meals data:', data.mealNames)
+  for (let i = 0; i < data.mealNames.length; i++) {
+    allUserMeals.push(data.mealNames[i]);
+  }
+  console.log(allUserMeals);
+}
+
 async function createMealsEntry(
-  breakfastObject,
-  lunchObject,
-  dinnerObject,
-  snackObject
+  mealsNameInput,
+  mealTimeInput,
+  caloriesInput,
+  proteinInput,
+  sugarsInput
 ) {
   const mealsEntryBody = JSON.stringify({
-    breakfast: { name: "breakfast Name" },
-    lunch: { name: "lunch Name" },
-    dinner: { name: "dinner Name" },
-    snack: { name: "snack" },
+    mealName: mealsNameInput,
+    mealTime: mealTimeInput,
+    calories: caloriesInput,
+    protein: proteinInput,
+    sugars: sugarsInput,
     userID: sessionStorage.userID,
     date: focusedDate,
   });
@@ -1560,15 +1738,14 @@ async function createMealsEntry(
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
     body: mealsEntryBody,
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
   if (data.message != "No Records Found.") {
     console.log("Meals Records: ", data);
-    console.log(data);
   } else {
     console.log("Is there any Meals data?");
   }
@@ -1582,8 +1759,8 @@ async function getMealsEntry(id) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1599,8 +1776,8 @@ async function getMealsEntriesByUserAndDate(userID, date) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
@@ -1615,7 +1792,27 @@ async function getMealsEntriesByUserAndDate(userID, date) {
   return data;
 }
 
-async function updateMealsEntry(mealsUpdateObject, id) {
+async function updateMealsEntry(mealsUpdateObject) {
+  console.log("mealsUpdateObject: ", mealsUpdateObject);
+  const URL = `${serverURL}/meals/update`;
+
+  const res = await fetch(URL, {
+    method: "PATCH",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ updateInfo: mealsUpdateObject,
+      "authorization": sessionStorage.token
+     }),
+    
+  });
+  const data = await res.json();
+  console.log(data);
+  document.getElementById("mealUpdateConfirmationLine").remove();
+}
+
+async function updateMealsEntryByID(mealsUpdateObject, id) {
   const URL = `${serverURL}/meals/update${id}`;
 
   const res = await fetch(URL, {
@@ -1624,8 +1821,10 @@ async function updateMealsEntry(mealsUpdateObject, id) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ updateInfo: mealsUpdateObject }),
-    // token: sessionStorage.token,
+    body: JSON.stringify({ updateInfo: mealsUpdateObject,
+      "authorization": sessionStorage.token
+     }),
+    
   });
   const data = await res.json();
   console.log(data);
@@ -1637,28 +1836,32 @@ async function deleteMealsEntry(mealsEntryID) {
   const res = await fetch(URL, {
     method: "DELETE",
     mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    token: sessionStorage.token,
+    headers: { "Content-Type": "application/json",
+      "authorization": sessionStorage.token
+     },
+
   });
   const data = await res.json();
   console.log(data);
 }
 
-async function findAllMealsEntries() {
-  const URL = `${serverURL}/meals/findall${sessionStorage.userID}`;
+async function findMealEntryByMealNameAndUserID(mealName) {
+  const URL = `${serverURL}/meals/find/${sessionStorage.userID}/${mealName}`;
+
+  // console.log(URL);
 
   const res = await fetch(URL, {
     method: "GET",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token
     },
-    token: sessionStorage.token,
   });
 
   const data = await res.json();
-
   // console.log(data);
+  return data;
 }
 
 const mealsUpdateObject = JSON.stringify({
@@ -1666,10 +1869,26 @@ const mealsUpdateObject = JSON.stringify({
 });
 //!
 
+async function updatemealsByDay() {
+  const url = `${serverURL}/meals/findmealbydateandid/${sessionStorage.userID}/${focusedDate}`;
+  const res = await fetch(url, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": sessionStorage.token,
+    },
+  });
+  const data = await res.json();
+
+  for (let i = 0; i < data.allMealNames.length; i++) {
+    mealsByDay.push(data.allMealNames[i]);
+  }
+}
+
 async function createDataObject(userID, date) {
-  console.log("creating data object");
-  let dataObject = {
-  };
+  // console.log("creating data object");
+  let dataObject = {};
 
   const workoutData = await getWorkoutEntriesByUserAndDate(userID, date);
   const workoutArray = await workoutData.getWorkoutRecords;
@@ -1687,8 +1906,10 @@ async function createDataObject(userID, date) {
   fillMenuContents(dataObject);
 }
 
-function fillMenuContents(object) {
-  // console.log(object);
+async function fillMenuContents(object) {
+  mealsByDay = [];
+
+  await updatemealsByDay();
 
   //! Routines
   // buildRoutinesContents(object.routines)
@@ -1698,9 +1919,23 @@ function fillMenuContents(object) {
   //! Cardio
   buildCardioContents(object.cardio);
   //! Meals
-  buildMealsContents(object.meals)
-}
+  buildMealsContents(object.meals);
+  const createMealBtn = document.createElement("button");
+  createMealBtn.id = "createMealBtn";
+  createMealBtn.textContent = "create meal";
+  if (!document.getElementById("createMealBtn")) {
+    document.getElementById("navbar").after(createMealBtn);
+  }
 
+  createMealBtn.addEventListener("click", () => {
+    const mealTime = "Breakfast";
+    const calories = "200";
+    const protein = 20;
+    const sugars = 20;
+    const mealName = "Testname";
+    createMealsEntry(mealName, mealTime, calories, protein, sugars);
+  });
+}
 
 //! Begin
 loginForm.addEventListener("submit", handleSubmitLogin);
