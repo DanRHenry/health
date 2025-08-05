@@ -8,6 +8,7 @@ const serverError = (res, error) => {
   });
 };
 
+// used
 //!Create DailyMeals Entry
 router.post("/create", async (req, res) => {
   const { mealTime, calories, protein, sugars, date, userID, mealName } =
@@ -49,6 +50,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+// used
 //!Find all meals for a user
 router.get("/findbyuser:userID", async (req, res)=> {
   try {
@@ -74,6 +76,7 @@ router.get("/findbyuser:userID", async (req, res)=> {
   }
 })
 
+// used
 //!Find a DailyMeals Entry
 router.get("/findone:id", async (req, res) => {
   try {
@@ -96,6 +99,7 @@ router.get("/findone:id", async (req, res) => {
   }
 });
 
+// used
 //!Find DailyMeals Entries by date
 router.get("/find:userID/:date", async (req, res) => {
   try {
@@ -117,6 +121,7 @@ router.get("/find:userID/:date", async (req, res) => {
   }
 });
 
+// used
 //!Update DailyMeals Entry without an ID
 router.patch("/update", async (req, res) => {
   try {
@@ -157,7 +162,7 @@ router.patch("/update", async (req, res) => {
   }
 });
 
-
+// unused
 //!Update DailyMeals Entry by ID //todo finish
 // router.patch("/update:mealsEntryID", async (req, res) => {
 //   try {
@@ -193,7 +198,9 @@ router.patch("/update", async (req, res) => {
 //   }
 // });
 
+// used
 //!Delete a DailyMeals Entry
+
 router.delete("/delete:mealsID", async (req, res) => {
   try {
     const { mealsID } = req.params;
@@ -215,6 +222,7 @@ router.delete("/delete:mealsID", async (req, res) => {
   }
 });
 
+// used
 //!Find meal by name and user id
 router.get("/find/:id/:mealName", async (req, res) => {
   try {
@@ -239,6 +247,7 @@ router.get("/find/:id/:mealName", async (req, res) => {
   }
 });
 
+// used
 //!Find all saved date by userID
 router.get("/findmealbydateandid/:id/:date", async (req, res) => {
   try {

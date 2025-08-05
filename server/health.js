@@ -30,12 +30,13 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/health/user",userController)
-
 app.use(requireValidation);
 
 app.use("/api/health/cardio", cardioController)
 app.use("/api/health/workout", workoutController)
 app.use("/api/health/meals", mealsController)
+
+// unused
 app.use("/api/health/dailyMeals", dailyMealsController)
 
 app.listen(PORT, () => {
