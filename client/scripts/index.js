@@ -4,7 +4,9 @@ const userPasswordField = document.getElementById("userPasswordField");
 const loginForm = document.getElementById("loginForm");
 
 import { serverURL } from "../helpers/serverURL.js";
-
+import {handleSubmitLogin} from "./components/users/handleSubmitLogin.js"
+import {getAllUserMeals} from "./components/meals/crud_functions/getAllUserMeals.js"
+// import {getWorkoutEntriesByUserAndDate} from "./components/workout/crud_functions/"
 //! ----------- Global Variables ---------------
 
 let today = new Date();
@@ -243,7 +245,7 @@ function createMainPage() {
 
     createDataObject(sessionStorage.userID, focusedDate);
 
-    getAllUserMeals();
+    getAllUserMeals(serverURL, allUserMeals);
 
     //? build function calls
     buildCardioWindow();
@@ -287,82 +289,7 @@ function createMainPage() {
     */
 
 //! Callback Functions
-async function handleSubmitLogin(e) {
-  e.preventDefault();
-  const URL = `${serverURL}/user/login`;
 
-  console.log(URL)
-  const body = JSON.stringify({
-    email: userEmailField.value,
-    password: userPasswordField.value,
-  });
-
-  const res = await fetch(URL, {
-    method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: body,
-  });
-
-  const data = await res.json();
-
-  console.log(data);
-  if (data.message === "User not found." || data.token === undefined) {
-    loginForm.removeEventListener("submit", handleSubmitLogin);
-    loginForm.addEventListener("submit", handleSubmitSignUp);
-
-    const signupBtn = document.createElement("button");
-    signupBtn.innerText = "Sign Up";
-    signupBtn.addEventListener("submit", handleSubmitSignUp);
-
-    loginForm.appendChild(signupBtn);
-  } else {
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("userID", data.user._id);
-    console.log("creating main page...");
-
-    createMainPage();
-  }
-}
-
-async function handleSubmitSignUp(e) {
-  e.preventDefault();
-
-  console.log("signing up");
-
-  const URL = `${serverURL}/user/signup`;
-
-  const body = JSON.stringify({
-    email: userEmailField.value,
-    password: userPasswordField.value,
-  });
-
-  const res = await fetch(URL, {
-    method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: body,
-  });
-
-  const data = await res.json();
-
-  console.log(data);
-
-  if (data.message === "Success! User Created!") {
-    sessionStorage.setItem("token", data.token);
-    createMainPage();
-  }
-  //   if (data.message === "User not found.") {
-  //     loginForm.removeEventListener("submit",handleSubmitLogin)
-  //     loginForm.addEventListener("submit", handleSubmitSignUp)
-  //   } else {
-  //     createMainPage();
-  //   }
-}
 
 function toggleMealsSectionMenu() {
   if (!mealsSection.style.minHeight) {
@@ -374,7 +301,6 @@ function toggleMealsSectionMenu() {
     // mealsSection.style.maxHeight = 0;
   }
 }
-
 
 function toggleCardioSectionMenu() {
   if (!cardioSection.style.minHeight) {
@@ -397,8 +323,6 @@ function toggleWorkoutSectionMenu() {
     workoutSection.style.maxHeight = 0;
   }
 }
-
-
 
 async function handleMealsInputChange() {
   console.log(allUserMeals);
@@ -544,6 +468,7 @@ async function handleWorkoutInputClick(e) {
   }
 }
 
+/*
 //! Remaining Cardio CRUD functions
 
 
@@ -665,7 +590,7 @@ const mealsUpdateObject = JSON.stringify({
   breakfast: { name: "changedName" },
 });
 //!
-
+*/
 
 
 async function createDataObject(userID, date) {
