@@ -1,4 +1,4 @@
-export async function getCardioEntriesByUserAndDate(userID, date) {
+export async function getCardioEntriesByUserAndDate(userID, date, serverURL) {
   const URL = `${serverURL}/cardio/find${userID}/${date}`;
 
   const res = await fetch(URL, {

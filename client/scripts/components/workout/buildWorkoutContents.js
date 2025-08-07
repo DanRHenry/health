@@ -156,4 +156,27 @@ export function buildWorkoutContents(workoutObject) {
       workoutTable.append(workoutRow);
     }
   }
+
+  async function handleWorkoutInputClick(e) {
+  // console.log(e.key)
+  if (e.key !== "Enter") {
+    return;
+  }
+
+  const workoutName = document.getElementById("workoutNameInput").value;
+
+  const workoutMachine = document.getElementById("workoutMachineInput").value;
+
+  const workoutLength = document.getElementById("workoutLengthInput").value;
+
+  // console.log("clicked", workoutName, workoutMachine, workoutLength);
+
+  if (workoutName && workoutMachine && workoutLength) {
+    console.log("new workout: ", workoutName, workoutMachine, workoutLength);
+    await createWorkoutEntry(workoutName, workoutMachine, workoutLength);
+
+    await createDataObject(sessionStorage.userID, focusedDate);
+  }
+}
+
 }

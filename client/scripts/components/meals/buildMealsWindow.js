@@ -1,3 +1,4 @@
+import {toggleMealsSectionMenu} from "./toggleMealsSectionMenu.js"
 export function buildMealsWindow() {
   const mealsSectionTop = document.createElement("div");
   mealsSectionTop.id = "mealsSectionTop";

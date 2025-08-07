@@ -1,5 +1,4 @@
-export async function handleSubmitLogin(e) {
-  e.preventDefault();
+export async function handleSubmitLogin(serverURL, createMainPage) {
   const URL = `${serverURL}/user/login`;
 
   console.log(URL)

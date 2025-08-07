@@ -4,9 +4,16 @@ const userPasswordField = document.getElementById("userPasswordField");
 const loginForm = document.getElementById("loginForm");
 
 import { serverURL } from "../helpers/serverURL.js";
-import {handleSubmitLogin} from "./components/users/handleSubmitLogin.js"
-import {getAllUserMeals} from "./components/meals/crud_functions/getAllUserMeals.js"
-// import {getWorkoutEntriesByUserAndDate} from "./components/workout/crud_functions/"
+import { handleSubmitLogin } from "./components/users/handleSubmitLogin.js";
+import { getAllUserMeals } from "./components/meals/crud_functions/getAllUserMeals.js";
+import { getWorkoutEntriesByUserAndDate } from "./components/workout/crud_functions/getWorkoutEntriesByUserAndDate.js";
+import { buildCardioWindow } from "./components/cardio/buildCardioWindow.js";
+import { getCardioEntriesByUserAndDate } from "./components/cardio/crud_functions/getCardioEntriesByUserAndDate.js";
+import { getMealsEntriesByUserAndDate } from "./components/meals/crud_functions/getMealsEntriesByUserAndDate.js";
+import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
+import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
+import { fillMenuContents } from "./components/fillMenuContents.js";
+
 //! ----------- Global Variables ---------------
 
 let today = new Date();
@@ -37,58 +44,58 @@ const calorieLimits = {
       maintain: 2554,
       losehalf: 2304,
       loseone: 2054,
-      losetwo: 1554
+      losetwo: 1554,
     },
     250: {
       maintain: 2494,
       losehalf: 2244,
       loseone: 1994,
-      losetwo: 1494
+      losetwo: 1494,
     },
     240: {
       maintain: 2440,
       losehalf: 2190,
       loseone: 1940,
-      losetwo: 1440
+      losetwo: 1440,
     },
     230: {
       maintain: 2386,
       losehalf: 2136,
       loseone: 1886,
-      losetwo: 1386
+      losetwo: 1386,
     },
     220: {
       maintain: 2331,
       losehalf: 2081,
       loseone: 1831,
-      losetwo: 1331
+      losetwo: 1331,
     },
     210: {
       maintain: 2277,
       losehalf: 2027,
       loseone: 1777,
-      losetwo: 1277
+      losetwo: 1277,
     },
     200: {
       maintain: 2222,
       losehalf: 1972,
       loseone: 1722,
-      losetwo: 1222
+      losetwo: 1222,
     },
     190: {
       maintain: 2168,
       losehalf: 1918,
       loseone: 1668,
-      losetwo: 1168
+      losetwo: 1168,
     },
     180: {
       maintain: 2113,
       losehalf: 1863,
       loseone: 1613,
-      losetwo: 1113
-    }
-  }
-}
+      losetwo: 1113,
+    },
+  },
+};
 
 //! Page Contruction Functions
 function createMainPage() {
@@ -291,182 +298,9 @@ function createMainPage() {
 //! Callback Functions
 
 
-function toggleMealsSectionMenu() {
-  if (!mealsSection.style.minHeight) {
-    mealsSection.style.maxHeight = null;
-    // mealsSection.style.minHeight = "30vh";
-    mealsSection.style.height = "fit-content";
-  } else {
-    // mealsSection.style.minHeight = null;
-    // mealsSection.style.maxHeight = 0;
-  }
-}
 
-function toggleCardioSectionMenu() {
-  if (!cardioSection.style.minHeight) {
-    cardioSection.style.maxHeight = null;
-    cardioSection.style.minHeight = "30vh";
-    cardioSection.style.height = "fit-content";
-  } else {
-    cardioSection.style.minHeight = null;
-    cardioSection.style.maxHeight = 0;
-  }
-}
 
-function toggleWorkoutSectionMenu() {
-  if (!workoutSection.style.minHeight) {
-    workoutSection.style.maxHeight = null;
-    workoutSection.style.minHeight = "30vh";
-    workoutSection.style.height = "fit-content";
-  } else {
-    workoutSection.style.minHeight = null;
-    workoutSection.style.maxHeight = 0;
-  }
-}
 
-async function handleMealsInputChange() {
-  console.log(allUserMeals);
-  console.log(mealsNameInput.value);
-
-  for (let i = 0; i < allUserMeals.length; i++) {
-    if (allUserMeals[i] === mealsNameInput.value) {
-      console.log("match");
-      const mealData = await findMealEntryByMealNameAndUserID(
-        mealsNameInput.value
-      );
-      // console.log("mealData: ", mealData);
-      const mealInfo = mealData.getAllMeals;
-      if (!document.getElementById("mealsIngredientsSection")) {
-        openMealsIngredientsInputDropdownSection();
-      }
-
-      document.getElementById("mealTimeInput").value = mealInfo.mealTime;
-      document.getElementById("caloriesInput").value = mealInfo.calories;
-      document.getElementById("proteinInput").value = mealInfo.protein;
-      document.getElementById("sugarsInput").value = mealInfo.sugars;
-    } else {
-      console.log(mealsNameInput.value);
-
-      //fetch the meal matching meal name and person id. Then update ingredient fields
-    }
-  }
-  getAllUserMeals();
-      // buildMealsWindow();
-
-}
-
-async function handleMealsInputClick(e) {
-  if (e.key !== "Enter") {
-    return;
-  }
-  const mealsNameInput = document.getElementById("mealsNameInput").value;
-
-  const mealTimeInput = document.getElementById("mealTimeInput").value;
-
-  const caloriesInput = document.getElementById("caloriesInput").value;
-
-  const proteinInput = document.getElementById("proteinInput").value;
-
-  const sugarsInput = document.getElementById("sugarsInput").value;
-
-  for (let i = 0; i < allUserMeals.length; i++) {
-    if (allUserMeals[i] === document.getElementById("mealsNameInput").value) {
-      console.log("match");
-      const updateConfirmationLine = document.createElement("div");
-      updateConfirmationLine.id = "mealUpdateConfirmationLine";
-      updateConfirmationLine.innerText =
-        "Do you want to update the existing entry?";
-      const yesBtn = document.createElement("button");
-      yesBtn.innerText = "Yes";
-      const noBtn = document.createElement("button");
-      noBtn.innerText = "No";
-      yesBtn.addEventListener("click", () => {
-        updateMealsEntry({
-          mealName: mealsNameInput,
-          mealTime: mealTimeInput,
-          calories: caloriesInput,
-          protein: proteinInput,
-          sugars: sugarsInput,
-          userID: sessionStorage.userID,
-          date: focusedDate,
-        });
-      });
-      noBtn.addEventListener("click", () => {
-        updateConfirmationLine.remove();
-      });
-      updateConfirmationLine.append(yesBtn, noBtn);
-      if (!document.getElementById("mealUpdateConfirmationLine")) {
-        mealsSection.append(updateConfirmationLine);
-        // yesBtn.focus()
-      }
-      return;
-    }
-  }
-
-  // console.log("clicked", mealsName, mealsCalories, mealsLength);
-
-  if (
-    mealsNameInput &&
-    mealTimeInput &&
-    caloriesInput &&
-    proteinInput &&
-    sugarsInput
-  ) {
-    // console.log("new meals: ", mealsName, mealsCalories, mealsLength);
-    await createMealsEntry(
-      mealsNameInput,
-      mealTimeInput,
-      caloriesInput,
-      proteinInput,
-      sugarsInput
-    );
-
-    await createDataObject(sessionStorage.userID, focusedDate);
-  }
-}
-
-async function handleCardioInputClick(e) {
-  // console.log(e.key)
-  if (e.key !== "Enter") {
-    return;
-  }
-
-  const cardioName = document.getElementById("cardioNameInput").value;
-
-  const cardioMachine = document.getElementById("cardioMachineInput").value;
-
-  const cardioLength = document.getElementById("cardioLengthInput").value;
-
-  // console.log("clicked", cardioName, cardioMachine, cardioLength);
-
-  if (cardioName && cardioMachine && cardioLength) {
-    console.log("new cardio:", cardioName, cardioMachine, cardioLength);
-    await createCardioEntry(cardioName, cardioMachine, cardioLength);
-    await createDataObject(sessionStorage.userID, focusedDate);
-  }
-}
-
-async function handleWorkoutInputClick(e) {
-  // console.log(e.key)
-  if (e.key !== "Enter") {
-    return;
-  }
-
-  const workoutName = document.getElementById("workoutNameInput").value;
-
-  const workoutMachine = document.getElementById("workoutMachineInput").value;
-
-  const workoutLength = document.getElementById("workoutLengthInput").value;
-
-  // console.log("clicked", workoutName, workoutMachine, workoutLength);
-
-  if (workoutName && workoutMachine && workoutLength) {
-    console.log("new workout: ", workoutName, workoutMachine, workoutLength);
-    await createWorkoutEntry(workoutName, workoutMachine, workoutLength);
-
-    await createDataObject(sessionStorage.userID, focusedDate);
-  }
-}
 
 /*
 //! Remaining Cardio CRUD functions
@@ -592,59 +426,38 @@ const mealsUpdateObject = JSON.stringify({
 //!
 */
 
-
 async function createDataObject(userID, date) {
   // console.log("creating data object");
   let dataObject = {};
 
-  const workoutData = await getWorkoutEntriesByUserAndDate(userID, date);
+  const workoutData = await getWorkoutEntriesByUserAndDate(
+    userID,
+    date,
+    serverURL
+  );
   const workoutArray = await workoutData.getWorkoutRecords;
 
-  const cardioData = await getCardioEntriesByUserAndDate(userID, date);
+  const cardioData = await getCardioEntriesByUserAndDate(
+    userID,
+    date,
+    serverURL
+  );
   const cardioArray = await cardioData.getCardioRecords;
 
-  const mealsData = await getMealsEntriesByUserAndDate(userID, date);
+  const mealsData = await getMealsEntriesByUserAndDate(userID, date, serverURL);
   const mealsDataArray = await mealsData.getMealsRecords;
 
   dataObject.workout = workoutArray;
   dataObject.cardio = cardioArray;
   dataObject.meals = mealsDataArray;
 
-  fillMenuContents(dataObject);
-}
-
-async function fillMenuContents(object) {
-  mealsByDay = [];
-
-  await updatemealsByDay();
-
-  //! Routines
-  // buildRoutinesContents(object.routines)
-  //! Workout
-  buildWorkoutContents(object.workout);
-
-  //! Cardio
-  buildCardioContents(object.cardio);
-  //! Meals
-  buildMealsContents(object.meals);
-  const createMealBtn = document.createElement("button");
-  createMealBtn.id = "createMealBtn";
-  createMealBtn.textContent = "create meal";
-  if (!document.getElementById("createMealBtn")) {
-    document.getElementById("navbar").after(createMealBtn);
-  }
-
-  createMealBtn.addEventListener("click", () => {
-    const mealTime = "Breakfast";
-    const calories = "200";
-    const protein = 20;
-    const sugars = 20;
-    const mealName = "Testname";
-    createMealsEntry(mealName, mealTime, calories, protein, sugars);
-  });
+  fillMenuContents(serverURL, dataObject, mealsByDay, focusedDate, allUserMeals);
 }
 
 //! Begin
-loginForm.addEventListener("submit", handleSubmitLogin);
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  handleSubmitLogin(serverURL, createMainPage);
+});
 
 createMainPage();

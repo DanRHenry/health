@@ -1,3 +1,4 @@
+import {toggleCardioSectionMenu} from "./toggleCardioSectionMenu.js"
 export function buildCardioWindow() {
   const cardioSectionTop = document.createElement("div");
   cardioSectionTop.id = "cardioSectionTop";

@@ -1,4 +1,4 @@
-export async function getMealsEntriesByUserAndDate(userID, date) {
+export async function getMealsEntriesByUserAndDate(userID, date, serverURL) {
   const URL = `${serverURL}/meals/find${userID}/${date}`;
 
   const res = await fetch(URL, {

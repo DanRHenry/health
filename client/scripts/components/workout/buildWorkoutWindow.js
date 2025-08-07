@@ -1,3 +1,4 @@
+import {toggleWorkoutSectionMenu} from "./toggleWorkoutSectionMenu.js"
 export function buildWorkoutWindow() {
   const workoutSectionTop = document.createElement("div");
   workoutSectionTop.id = "workoutSectionTop";

@@ -1,4 +1,6 @@
-export function buildMealsContents(mealsObject) {
+import {openMealsIngredientsInputDropdownSection} from "./openMealsIngredientsInputDropdownSection.js"
+
+export function buildMealsContents(mealsObject, allUserMeals) {
   // console.log("mealsObject: ", mealsObject);
   // console.log("bird")
   mealsSection.innerHTML = "";
@@ -160,5 +162,103 @@ export function buildMealsContents(mealsObject) {
       );
       mealsTable.append(mealsRow);
     }
+  }
+  async function handleMealsInputClick(e) {
+    if (e.key !== "Enter") {
+      return;
+    }
+    const mealsNameInput = document.getElementById("mealsNameInput").value;
+
+    const mealTimeInput = document.getElementById("mealTimeInput").value;
+
+    const caloriesInput = document.getElementById("caloriesInput").value;
+
+    const proteinInput = document.getElementById("proteinInput").value;
+
+    const sugarsInput = document.getElementById("sugarsInput").value;
+
+    for (let i = 0; i < allUserMeals.length; i++) {
+      if (allUserMeals[i] === document.getElementById("mealsNameInput").value) {
+        console.log("match");
+        const updateConfirmationLine = document.createElement("div");
+        updateConfirmationLine.id = "mealUpdateConfirmationLine";
+        updateConfirmationLine.innerText =
+          "Do you want to update the existing entry?";
+        const yesBtn = document.createElement("button");
+        yesBtn.innerText = "Yes";
+        const noBtn = document.createElement("button");
+        noBtn.innerText = "No";
+        yesBtn.addEventListener("click", () => {
+          updateMealsEntry({
+            mealName: mealsNameInput,
+            mealTime: mealTimeInput,
+            calories: caloriesInput,
+            protein: proteinInput,
+            sugars: sugarsInput,
+            userID: sessionStorage.userID,
+            date: focusedDate,
+          });
+        });
+        noBtn.addEventListener("click", () => {
+          updateConfirmationLine.remove();
+        });
+        updateConfirmationLine.append(yesBtn, noBtn);
+        if (!document.getElementById("mealUpdateConfirmationLine")) {
+          mealsSection.append(updateConfirmationLine);
+          // yesBtn.focus()
+        }
+        return;
+      }
+    }
+
+    // console.log("clicked", mealsName, mealsCalories, mealsLength);
+
+    if (
+      mealsNameInput &&
+      mealTimeInput &&
+      caloriesInput &&
+      proteinInput &&
+      sugarsInput
+    ) {
+      // console.log("new meals: ", mealsName, mealsCalories, mealsLength);
+      await createMealsEntry(
+        mealsNameInput,
+        mealTimeInput,
+        caloriesInput,
+        proteinInput,
+        sugarsInput
+      );
+
+      await createDataObject(sessionStorage.userID, focusedDate);
+    }
+  }
+  async function handleMealsInputChange() {
+    console.log(allUserMeals);
+    console.log(mealsNameInput.value);
+
+    for (let i = 0; i < allUserMeals.length; i++) {
+      if (allUserMeals[i] === mealsNameInput.value) {
+        console.log("match");
+        const mealData = await findMealEntryByMealNameAndUserID(
+          mealsNameInput.value
+        );
+        // console.log("mealData: ", mealData);
+        const mealInfo = mealData.getAllMeals;
+        if (!document.getElementById("mealsIngredientsSection")) {
+          openMealsIngredientsInputDropdownSection();
+        }
+
+        document.getElementById("mealTimeInput").value = mealInfo.mealTime;
+        document.getElementById("caloriesInput").value = mealInfo.calories;
+        document.getElementById("proteinInput").value = mealInfo.protein;
+        document.getElementById("sugarsInput").value = mealInfo.sugars;
+      } else {
+        console.log(mealsNameInput.value);
+
+        //fetch the meal matching meal name and person id. Then update ingredient fields
+      }
+    }
+    getAllUserMeals();
+    // buildMealsWindow();
   }
 }

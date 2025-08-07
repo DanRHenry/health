@@ -233,4 +233,24 @@ export function buildCardioContents(cardioObject) {
       cardioTable.append(cardioRow);
     }
   }
+  async function handleCardioInputClick(e) {
+  // console.log(e.key)
+  if (e.key !== "Enter") {
+    return;
+  }
+
+  const cardioName = document.getElementById("cardioNameInput").value;
+
+  const cardioMachine = document.getElementById("cardioMachineInput").value;
+
+  const cardioLength = document.getElementById("cardioLengthInput").value;
+
+  // console.log("clicked", cardioName, cardioMachine, cardioLength);
+
+  if (cardioName && cardioMachine && cardioLength) {
+    console.log("new cardio:", cardioName, cardioMachine, cardioLength);
+    await createCardioEntry(cardioName, cardioMachine, cardioLength);
+    await createDataObject(sessionStorage.userID, focusedDate);
+  }
+}
 }

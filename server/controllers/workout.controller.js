@@ -70,7 +70,7 @@ router.get("/findone:id", async (req, res) => {
 router.get("/find:userID/:date", async (req, res) => {
   try {
     const { userID, date } = req.params;
-    // console.log("Find workout by date: ",req.params)
+    console.log("Find workout by date: ",req.params)
     const getWorkoutRecords = await Workout.find({
       dateCreated: date,
       userID: userID,
