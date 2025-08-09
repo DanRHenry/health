@@ -13,6 +13,8 @@ import { getMealsEntriesByUserAndDate } from "./components/meals/crud_functions/
 import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
 import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
 import { fillMenuContents } from "./components/fillMenuContents.js";
+import {createMealsEntry} from "./components/meals/crud_functions/createMealsEntry.js"
+
 
 //! ----------- Global Variables ---------------
 
@@ -36,7 +38,6 @@ let dateDisplayInfo = `${adjustedMonth}/${today.getDate()}/${today.getFullYear()
 let focusedDate = `${month}${date}${today.getFullYear()}`;
 
 let allUserMeals = [];
-let mealsByDay = [];
 
 const calorieLimits = {
   "6_2": {
@@ -98,7 +99,7 @@ const calorieLimits = {
 };
 
 //! Page Contruction Functions
-function createMainPage() {
+async function createMainPage() {
   if (sessionStorage.userID && sessionStorage.token) {
     body.innerHTML = "";
 
@@ -169,6 +170,7 @@ function createMainPage() {
 
       focusedDate = `${month}${date}${adjustedDate.getFullYear()}`;
 
+      console.log('changed focusedDate: ',focusedDate)
       dateDisplay.innerText = dateDisplayInfo;
       createDataObject(sessionStorage.userID, focusedDate);
     }
@@ -252,8 +254,11 @@ function createMainPage() {
 
     createDataObject(sessionStorage.userID, focusedDate);
 
-    getAllUserMeals(serverURL, allUserMeals);
+    console.log("here")
+    allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
+    console.log("there")
 
+    console.log("index.js - allUserMeals: ",allUserMeals)
     //? build function calls
     buildCardioWindow();
     buildWorkoutWindow();
@@ -262,172 +267,8 @@ function createMainPage() {
   }
 }
 
-/* 
-    day, date
-    weight
-
-    Food: 
-        breakfast: { //collapsable menu
-            calories,
-            protein,
-            salt,
-            carbs
-        } etc...
-        lunch
-        dinner
-        snacks
-
-        Total calories
-        total protein
-        total salt
-        total carbohydrates
-
-    Exercise: 
-
-    cardio:
-
-    workout
-        upper body:
-        lower body: 
-
-    
-        previous next
-    
-    */
-
-//! Callback Functions
-
-
-
-
-
-
-/*
-//! Remaining Cardio CRUD functions
-
-
-
-// unused
-async function getCardioEntry(id) {
-  const URL = `${serverURL}/cardio/findone${id}`;
-
-  const res = await fetch(URL, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      "authorization": sessionStorage.token,
-    },
-  });
-
-  const data = await res.json();
-  console.log(data);
-  return data;
-}
-
-
-const cardioUpdateObject = JSON.stringify({
-  exerciseName: "again changedName",
-  machine: "newmachine",
-  date: focusedDate,
-});
-//!
-
-//! Remaining Workout CRUD functions
-
-
-// unused
-async function getWorkoutEntry(id) {
-  const URL = `${serverURL}/workout/findone${id}`;
-
-  const res = await fetch(URL, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      "authorization": sessionStorage.token,
-    },
-  });
-
-  const data = await res.json();
-  console.log(data);
-  return data;
-}
-
-
-// unused
-async function updateWorkoutEntry(workoutUpdateObject, id) {
-  const URL = `${serverURL}/workout/update${id}`;
-
-  const res = await fetch(URL, {
-    method: "PATCH",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ updateInfo: workoutUpdateObject,
-          authorization: sessionStorage.token
-     }),
-  });
-  const data = await res.json();
-  console.log(data);
-}
-
-
-const workoutUpdateObject = JSON.stringify({
-  exerciseName: "again changedName",
-  machine: "newmachine",
-  date: focusedDate,
-});
-//!
-
-//! Remaining Meals CRUD functions
-
-async function getMealsEntry(id) {
-  const URL = `${serverURL}/meals/findone${id}`;
-
-  const res = await fetch(URL, {
-    method: "GET",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-      "authorization": sessionStorage.token,
-    },
-  });
-
-  const data = await res.json();
-  console.log(data);
-  return data;
-}
-
-// unused
-async function updateMealsEntryByID(mealsUpdateObject, id) {
-  const URL = `${serverURL}/meals/update${id}`;
-
-  const res = await fetch(URL, {
-    method: "PATCH",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ updateInfo: mealsUpdateObject,
-      "authorization": sessionStorage.token
-     }),
-    
-  });
-  const data = await res.json();
-  console.log(data);
-}
-
-
-const mealsUpdateObject = JSON.stringify({
-  breakfast: { name: "changedName" },
-});
-//!
-*/
-
 async function createDataObject(userID, date) {
-  // console.log("creating data object");
+  console.log("creating data object for: ", date)
   let dataObject = {};
 
   const workoutData = await getWorkoutEntriesByUserAndDate(
@@ -451,7 +292,28 @@ async function createDataObject(userID, date) {
   dataObject.cardio = cardioArray;
   dataObject.meals = mealsDataArray;
 
-  fillMenuContents(serverURL, dataObject, mealsByDay, focusedDate, allUserMeals);
+  fillMenuContents(
+    serverURL,
+    dataObject,
+    focusedDate,
+    allUserMeals
+  );
+
+    //!temporary test button section:
+  const createMealBtn = document.createElement("button");
+  createMealBtn.id = "createMealBtn";
+  createMealBtn.textContent = "create meal";
+  if (!document.getElementById("createMealBtn")) {
+    document.getElementById("navbar").after(createMealBtn);
+  }
+
+  createMealBtn.addEventListener("click", () => {
+    const calories = "200";
+    const protein = 20;
+    const sugars = 20;
+    const mealName = "Testname";
+    createMealsEntry(mealName, calories, protein, sugars, serverURL);
+  });
 }
 
 //! Begin

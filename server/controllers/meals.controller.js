@@ -10,38 +10,33 @@ const serverError = (res, error) => {
 
 //!Create Meals Entry
 router.post("/create", async (req, res) => {
-  const { mealTime, calories, protein, sugars, date, userID, mealName } =
-    req.body;
-
   try {
-    console.log(req.body);
-    const meals = new Meals({
+    const { calories, protein, sugars, userID, mealName } =
+      req.body;
+
+    const meal = new Meals({
+      userID: userID,
       mealName: mealName,
-      mealTime: mealTime,
       calories: calories,
       protein: protein,
       sugars: sugars,
-      date: date,
-      userID: userID,
     });
 
-    const checkForExistingMealsEntry = await Meals.findOne(
-      {
-        mealName: mealName,
-        userID: userID
-      }
-    );
+    const checkForExistingMealsEntry = await Meals.findOne({
+      userID: userID,
+      mealName: mealName,
+    });
 
     if (checkForExistingMealsEntry) {
       res.status(200).json({
-        message: "Meals Entry Already There",
+        message: "Meal Entry Already There",
       });
     } else {
-      const newMeals = await meals.save();
+      const newMeal = await meal.save();
 
       res.status(200).json({
-        newMeals: newMeals,
-        message: "Success! New Meals Entry Created!",
+        message: "Success! New Meal Entry Created!",
+        newMeals: newMeal,
       });
     }
   } catch (err) {
@@ -50,29 +45,29 @@ router.post("/create", async (req, res) => {
 });
 
 //!Find all meals for a user
-router.get("/findbyuser:userID", async (req, res)=> {
+router.get("/findbyuser:userID", async (req, res) => {
   try {
-    const {userID} = req.params;
+    const { userID } = req.params;
     const findmeals = await Meals.find({
       userID: userID,
-    })
-    let mealNames = []
+    });
+    let mealNames = [];
     for (let i = 0; i < findmeals.length; i++) {
-      mealNames.push(findmeals[i].mealName)
+      mealNames.push(findmeals[i].mealName);
     }
 
     findmeals
-    ? res.status(200).json({
-      message: "Found!",
-      mealNames
-    })
-    : res.status(404).json({
-      message: "No meal names found"
-    })
-    } catch (err) {
+      ? res.status(200).json({
+          message: "Found!",
+          mealNames,
+        })
+      : res.status(404).json({
+          message: "No meal names found",
+        });
+  } catch (err) {
     serverError(res, err);
   }
-})
+});
 
 //!Find a Meals Entry
 router.get("/findone:id", async (req, res) => {
@@ -122,23 +117,21 @@ router.patch("/update", async (req, res) => {
   try {
     const { updateInfo } = req.body;
     const mealName = updateInfo.mealName;
-    const userID = updateInfo.userID
-    const record = await Meals.findOne({ mealName: mealName,
-    userID: userID
-     });
-     
+    const userID = updateInfo.userID;
+    const record = await Meals.findOne({ mealName: mealName, userID: userID });
+
     if (!record) {
       res.status(404).json({
         message: "Entry not found to update.",
       });
-    } 
-    console.log("record: ",record)
-    
+    }
+    console.log("record: ", record);
+
     // This makes sure the information has been updated before returning
     const returnOption = { new: true };
 
     const updateMealsRecord = await Meals.findOneAndUpdate(
-      {_id: record._id},
+      { _id: record._id },
       updateInfo,
       returnOption
     );
@@ -152,11 +145,10 @@ router.patch("/update", async (req, res) => {
           message: "Unable to update the meals entry. Try again later.",
         });
   } catch (err) {
-    console.log("error: ",err)
+    console.log("error: ", err);
     serverError(err);
   }
 });
-
 
 //!Update Meals Entry by ID //todo finish
 // router.patch("/update:mealsEntryID", async (req, res) => {
@@ -252,19 +244,19 @@ router.get("/findmealbydateandid/:id/:date", async (req, res) => {
 
     // console.log("all meals by name and user: ",getAllMeals)
 
-    const allMealNames = []
+    const allMealNames = [];
     for (let i = 0; i < getAllMeals.length; i++) {
-      allMealNames.push(getAllMeals[i].mealName)
+      allMealNames.push(getAllMeals[i].mealName);
     }
-    getAllMeals? 
-      res.status(200).json({
-        message: "All found meal names: ",
-        allMealNames
-      })
+    getAllMeals
+      ? res.status(200).json({
+          message: "All found meal names: ",
+          allMealNames,
+        })
       : res.status(404).json({
-        message: "No meals found"
-      })
-      } catch (err) {
+          message: "No meals found",
+        });
+  } catch (err) {
     serverError(err);
   }
 });

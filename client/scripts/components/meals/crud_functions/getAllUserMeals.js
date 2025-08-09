@@ -1,5 +1,5 @@
-export async function getAllUserMeals(serverURL, allUserMeals) {  
-
+export async function getAllUserMeals(serverURL) {  
+  const allUserMeals = []
   const res = await fetch(
     `${serverURL}/meals/findbyuser${sessionStorage.userID}`,
       {
@@ -13,9 +13,8 @@ export async function getAllUserMeals(serverURL, allUserMeals) {
   );
 
   const data = await res.json();
-  // console.log('meals data:', data.mealNames)
   for (let i = 0; i < data.mealNames.length; i++) {
     allUserMeals.push(data.mealNames[i]);
   }
-  console.log(allUserMeals);
+  return allUserMeals;
 }

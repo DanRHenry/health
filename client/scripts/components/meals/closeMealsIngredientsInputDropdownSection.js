@@ -1,3 +1,5 @@
+import { openMealsIngredientsInputDropdownSection } from "./openMealsIngredientsInputDropdownSection.js";
+
 export function closeMealsIngredientsInputDropdownSection() {
   document.getElementById("mealsIngredientsInputDropdownBtn").removeEventListener(
     "click",
@@ -10,5 +12,5 @@ export function closeMealsIngredientsInputDropdownSection() {
   document.getElementById("mealsIngredientsInputDropdownBtn").style.transform =
     null;
   // console.log("clicked")
-  mealsIngredientsSection.remove();
+  document.getElementById("mealsIngredientsSection").remove();
 }

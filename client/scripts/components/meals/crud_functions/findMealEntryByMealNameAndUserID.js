@@ -1,4 +1,4 @@
-export async function findMealEntryByMealNameAndUserID(mealName) {
+export async function findMealEntryByMealNameAndUserID(mealName, serverURL) {
   const URL = `${serverURL}/meals/find/${sessionStorage.userID}/${mealName}`;
 
   // console.log(URL);

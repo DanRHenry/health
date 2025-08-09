@@ -1,8 +1,18 @@
 import {openMealsIngredientsInputDropdownSection} from "./openMealsIngredientsInputDropdownSection.js"
+import {findMealEntryByMealNameAndUserID} from "./crud_functions/findMealEntryByMealNameAndUserID.js"
+import { serverURL } from "../../../helpers/serverURL.js";
+import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
+import { getMealsByDay } from "./crud_functions/getMealsByDay.js";
 
-export function buildMealsContents(mealsObject, allUserMeals) {
+export async function buildMealsContents(mealsObject, allUserMeals, focusedDate) {
   // console.log("mealsObject: ", mealsObject);
   // console.log("bird")
+  
+    let mealsByDay = await getMealsByDay(serverURL, focusedDate); 
+     
+    console.log('mealsbyday:', mealsByDay)
+ 
+
   mealsSection.innerHTML = "";
   const mealsTable = document.createElement("table");
   mealsTable.id = "mealsTable";
@@ -39,6 +49,7 @@ export function buildMealsContents(mealsObject, allUserMeals) {
   mealsNameInput.id = "mealsNameInput";
   mealsNameInput.name = "mealsNameInput";
   mealsNameInput.spellcheck = "false";
+  mealsNameInput.autocomplete = "off";
   mealsNameInput.addEventListener("keydown", handleMealsInputClick);
   mealsNameInput.addEventListener("change", handleMealsInputChange);
 
@@ -163,6 +174,7 @@ export function buildMealsContents(mealsObject, allUserMeals) {
       mealsTable.append(mealsRow);
     }
   }
+
   async function handleMealsInputClick(e) {
     if (e.key !== "Enter") {
       return;
@@ -211,19 +223,14 @@ export function buildMealsContents(mealsObject, allUserMeals) {
       }
     }
 
-    // console.log("clicked", mealsName, mealsCalories, mealsLength);
-
     if (
       mealsNameInput &&
-      mealTimeInput &&
       caloriesInput &&
       proteinInput &&
       sugarsInput
     ) {
-      // console.log("new meals: ", mealsName, mealsCalories, mealsLength);
       await createMealsEntry(
         mealsNameInput,
-        mealTimeInput,
         caloriesInput,
         proteinInput,
         sugarsInput
@@ -232,20 +239,20 @@ export function buildMealsContents(mealsObject, allUserMeals) {
       await createDataObject(sessionStorage.userID, focusedDate);
     }
   }
+
   async function handleMealsInputChange() {
-    console.log(allUserMeals);
-    console.log(mealsNameInput.value);
 
     for (let i = 0; i < allUserMeals.length; i++) {
       if (allUserMeals[i] === mealsNameInput.value) {
         console.log("match");
         const mealData = await findMealEntryByMealNameAndUserID(
-          mealsNameInput.value
+          mealsNameInput.value,
+          serverURL
         );
         // console.log("mealData: ", mealData);
         const mealInfo = mealData.getAllMeals;
         if (!document.getElementById("mealsIngredientsSection")) {
-          openMealsIngredientsInputDropdownSection();
+          openMealsIngredientsInputDropdownSection(handleMealsInputClick);
         }
 
         document.getElementById("mealTimeInput").value = mealInfo.mealTime;
@@ -258,7 +265,10 @@ export function buildMealsContents(mealsObject, allUserMeals) {
         //fetch the meal matching meal name and person id. Then update ingredient fields
       }
     }
-    getAllUserMeals();
+        console.log("here")
+
+    allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
+    console.log("mealsNameInputDropdown: ",mealsNameInputDropdown)
     // buildMealsWindow();
   }
 }

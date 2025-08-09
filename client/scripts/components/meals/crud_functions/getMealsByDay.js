@@ -1,4 +1,5 @@
-export async function updatemealsByDay(serverURL, focusedDate) {
+export async function getMealsByDay(serverURL, focusedDate) {
+  let mealsByDay = []
   const url = `${serverURL}/meals/findmealbydateandid/${sessionStorage.userID}/${focusedDate}`;
   const res = await fetch(url, {
     method: "GET",
@@ -13,4 +14,5 @@ export async function updatemealsByDay(serverURL, focusedDate) {
   for (let i = 0; i < data.allMealNames.length; i++) {
     mealsByDay.push(data.allMealNames[i]);
   }
+  return mealsByDay
 }

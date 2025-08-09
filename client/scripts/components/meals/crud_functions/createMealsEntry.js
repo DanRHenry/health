@@ -1,18 +1,17 @@
 export async function createMealsEntry(
   mealsNameInput,
-  mealTimeInput,
   caloriesInput,
   proteinInput,
-  sugarsInput
+  sugarsInput,
+  serverURL
 ) {
+
   const mealsEntryBody = JSON.stringify({
     mealName: mealsNameInput,
-    mealTime: mealTimeInput,
     calories: caloriesInput,
     protein: proteinInput,
     sugars: sugarsInput,
     userID: sessionStorage.userID,
-    date: focusedDate,
   });
 
   const URL = `${serverURL}/meals/create`;
@@ -30,7 +29,5 @@ export async function createMealsEntry(
   const data = await res.json();
   if (data.message != "No Records Found.") {
     console.log("Meals Records: ", data);
-  } else {
-    console.log("Is there any Meals data?");
-  }
+  } 
 }
