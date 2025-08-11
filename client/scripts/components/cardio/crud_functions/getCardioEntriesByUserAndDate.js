@@ -1,4 +1,5 @@
 export async function getCardioEntriesByUserAndDate(userID, date, serverURL) {
+  try {
   const URL = `${serverURL}/cardio/find${userID}/${date}`;
 
   const res = await fetch(URL, {
@@ -18,4 +19,7 @@ export async function getCardioEntriesByUserAndDate(userID, date, serverURL) {
     // console.log("Is there any Cardio data?", console.log(data.message));
   }
   return data;
+    } catch (err){
+      console.error(err)
+    }
 }

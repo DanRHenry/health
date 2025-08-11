@@ -1,4 +1,5 @@
 export async function getAllUserMeals(serverURL) {  
+  try{
   const allUserMeals = []
   const res = await fetch(
     `${serverURL}/meals/findbyuser${sessionStorage.userID}`,
@@ -17,4 +18,7 @@ export async function getAllUserMeals(serverURL) {
     allUserMeals.push(data.mealNames[i]);
   }
   return allUserMeals;
+  } catch (err) {
+    console.error(err)
+  }
 }

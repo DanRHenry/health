@@ -1,4 +1,5 @@
 export async function handleSubmitLogin(serverURL, createMainPage) {
+  try{
   const URL = `${serverURL}/user/login`;
 
   console.log(URL)
@@ -34,5 +35,8 @@ export async function handleSubmitLogin(serverURL, createMainPage) {
     console.log("creating main page...");
 
     createMainPage();
+  }
+  } catch (err) {
+    console.error(err)
   }
 }

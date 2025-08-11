@@ -1,4 +1,5 @@
 export async function getMealsEntriesByUserAndDate(userID, date, serverURL) {
+  try{
   const URL = `${serverURL}/meals/find${userID}/${date}`;
   const res = await fetch(URL, {
     method: "GET",
@@ -11,4 +12,7 @@ export async function getMealsEntriesByUserAndDate(userID, date, serverURL) {
 
   const data = await res.json();
   return data;
+} catch (err) {
+  console.error(err)
+}
 }

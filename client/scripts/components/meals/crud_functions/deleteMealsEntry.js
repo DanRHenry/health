@@ -1,4 +1,5 @@
 export async function deleteMealsEntry(mealsEntryID) {
+  try{
   const URL = `${serverURL}/meals/delete${mealsEntryID}`;
 
   const res = await fetch(URL, {
@@ -11,4 +12,7 @@ export async function deleteMealsEntry(mealsEntryID) {
   });
   const data = await res.json();
   console.log(data);
+  } catch (err) {
+    console.error(err)
+  }
 }

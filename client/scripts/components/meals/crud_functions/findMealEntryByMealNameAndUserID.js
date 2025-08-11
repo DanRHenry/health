@@ -1,4 +1,5 @@
 export async function findMealEntryByMealNameAndUserID(mealName, serverURL) {
+  try{
   const URL = `${serverURL}/meals/find/${sessionStorage.userID}/${mealName}`;
 
   // console.log(URL);
@@ -15,4 +16,7 @@ export async function findMealEntryByMealNameAndUserID(mealName, serverURL) {
   const data = await res.json();
   // console.log(data);
   return data;
+  } catch (err) {
+    console.error(err)
+  }
 }

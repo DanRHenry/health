@@ -2,7 +2,7 @@ export async function handleSubmitSignUp(e) {
   e.preventDefault();
 
   console.log("signing up");
-
+ try{
   const URL = `${serverURL}/user/signup`;
 
   const body = JSON.stringify({
@@ -33,4 +33,7 @@ export async function handleSubmitSignUp(e) {
   //   } else {
   //     createMainPage();
   //   }
+  }catch (err) {
+    console.error(err)
+  }
 }

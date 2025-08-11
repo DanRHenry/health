@@ -1,4 +1,5 @@
 export async function updateCardioEntry(cardioUpdateObject, id) {
+  try{
   const URL = `${serverURL}/cardio/update${id}`;
   // console.log(cardioUpdateObject, id)
   const res = await fetch(URL, {
@@ -13,4 +14,7 @@ export async function updateCardioEntry(cardioUpdateObject, id) {
   const data = await res.json();
   console.log(data);
   createDataObject(sessionStorage.userID, focusedDate);
+    } catch (err) {
+      console.error(err)
+    }
 }

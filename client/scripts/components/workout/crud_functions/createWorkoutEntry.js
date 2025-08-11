@@ -8,6 +8,7 @@ export async function createWorkoutEntry(workoutName, machine, duration) {
     userID: sessionStorage.userID,
   });
 
+  try{
   const URL = `${serverURL}/workout/create`;
 
   const res = await fetch(URL, {
@@ -23,4 +24,7 @@ export async function createWorkoutEntry(workoutName, machine, duration) {
   const data = await res.json();
 
   // console.log(data);
+  } catch (err) {
+    console.error(err)
+  }
 }

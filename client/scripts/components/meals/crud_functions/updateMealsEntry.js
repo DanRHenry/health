@@ -1,4 +1,5 @@
 export async function updateMealsEntry(mealsUpdateObject) {
+  try{
   console.log("mealsUpdateObject: ", mealsUpdateObject);
   const URL = `${serverURL}/meals/update`;
 
@@ -16,4 +17,7 @@ export async function updateMealsEntry(mealsUpdateObject) {
   const data = await res.json();
   console.log(data);
   document.getElementById("mealUpdateConfirmationLine").remove();
+  } catch (err) {
+    console.error(err)
+  }
 }

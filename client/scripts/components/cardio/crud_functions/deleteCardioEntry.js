@@ -1,4 +1,5 @@
 export async function deleteCardioEntry(cardioEntryID) {
+  try{
   const URL = `${serverURL}/cardio/delete${cardioEntryID}`;
 
   const res = await fetch(URL, {
@@ -11,4 +12,7 @@ export async function deleteCardioEntry(cardioEntryID) {
   const data = await res.json();
   // console.log(data);
   await createDataObject(sessionStorage.userID, focusedDate);
+  } catch (err) {
+    console.error(err)
+  }
 }

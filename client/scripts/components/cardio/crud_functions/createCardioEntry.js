@@ -7,6 +7,7 @@ export async function createCardioEntry(exerciseName, machine, duration) {
     userID: sessionStorage.userID,
   });
 
+  try {
   const URL = `${serverURL}/cardio/create`;
 
   const res = await fetch(URL, {
@@ -20,4 +21,8 @@ export async function createCardioEntry(exerciseName, machine, duration) {
   });
 
   const data = await res.json();
+    }
+    catch (err) {
+      console.error(err)
+    }
 }

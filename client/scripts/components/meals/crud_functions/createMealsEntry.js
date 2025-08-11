@@ -6,6 +6,7 @@ export async function createMealsEntry(
   serverURL
 ) {
 
+  try {
   const mealsEntryBody = JSON.stringify({
     mealName: mealsNameInput,
     calories: caloriesInput,
@@ -30,4 +31,7 @@ export async function createMealsEntry(
   if (data.message != "No Records Found.") {
     console.log("Meals Records: ", data);
   } 
+  } catch (err) {
+    console.error(err)
+  }
 }

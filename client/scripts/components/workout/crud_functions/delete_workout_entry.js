@@ -1,4 +1,5 @@
 export async function deleteWorkoutEntry(workoutEntryID) {
+  try{
   const URL = `${serverURL}/workout/delete${workoutEntryID}`;
 
   const res = await fetch(URL, {
@@ -12,4 +13,7 @@ export async function deleteWorkoutEntry(workoutEntryID) {
   const data = await res.json();
   console.log(data);
   await createDataObject(sessionStorage.userID, focusedDate);
+  } catch (err) {
+    console.error(err)
+  }
 }
