@@ -2,7 +2,7 @@ import { closeMealsIngredientsInputDropdownSection } from "./closeMealsIngredien
 import {buildDailyMealsSection} from "../dailyMeals/buildDailyMealsSection.js"
 
 
-export function openMealsIngredientsInputDropdownSection(handleMealsInputClick) {
+export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, focusedDate, allUserMeals) {
   document
     .getElementById("mealsIngredientsInputDropdownBtn")
     .removeEventListener("click", openMealsIngredientsInputDropdownSection);
@@ -66,5 +66,5 @@ export function openMealsIngredientsInputDropdownSection(handleMealsInputClick) 
   );
 
   mealsTable.after(mealsIngredientsSection);
-  buildDailyMealsSection()
+  buildDailyMealsSection(focusedDate)
 }

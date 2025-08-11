@@ -1,18 +1,14 @@
-import {openMealsIngredientsInputDropdownSection} from "./openMealsIngredientsInputDropdownSection.js"
-import {findMealEntryByMealNameAndUserID} from "./crud_functions/findMealEntryByMealNameAndUserID.js"
+import { openMealsIngredientsInputDropdownSection } from "./openMealsIngredientsInputDropdownSection.js";
+import { findMealEntryByMealNameAndUserID } from "./crud_functions/findMealEntryByMealNameAndUserID.js";
 import { serverURL } from "../../../helpers/serverURL.js";
 import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
 import { getMealsByDay } from "./crud_functions/getMealsByDay.js";
 
-export async function buildMealsContents(mealsObject, allUserMeals, focusedDate) {
-  // console.log("mealsObject: ", mealsObject);
-  // console.log("bird")
-  
-    let mealsByDay = await getMealsByDay(serverURL, focusedDate); 
-     
-    console.log('mealsbyday:', mealsByDay)
- 
-
+export async function buildMealsContents(
+  mealsObject,
+  allUserMeals,
+  focusedDate
+) {
   mealsSection.innerHTML = "";
   const mealsTable = document.createElement("table");
   mealsTable.id = "mealsTable";
@@ -98,8 +94,6 @@ export async function buildMealsContents(mealsObject, allUserMeals, focusedDate)
   mealsSection.append(mealsTable);
 
   if (mealsObject) {
-    console.log("mealsObject: ", mealsObject);
-    //-------------------------------
     for (let i = 0; i < mealsObject.length; i++) {
       let year = Number(mealsObject[i].date.slice(4));
       const date = Number(mealsObject[i].date.slice(2, 4));
@@ -156,14 +150,6 @@ export async function buildMealsContents(mealsObject, allUserMeals, focusedDate)
       mealsName.innerText = nameText;
       mealsName.className = "mealsNames";
 
-      // const
-      // const mealsCalories = document.createElement("td");
-      // mealsCalories.innerText = machineText;
-      // mealsCalories.className = "mealsCalories";
-
-      // const mealsLength = document.createElement("td");
-      // mealsLength.innerText = lengthText;
-      // mealsLength.className = "mealsLengths";
       mealsRow.append(
         checkBox,
         // mealsDate,
@@ -223,12 +209,7 @@ export async function buildMealsContents(mealsObject, allUserMeals, focusedDate)
       }
     }
 
-    if (
-      mealsNameInput &&
-      caloriesInput &&
-      proteinInput &&
-      sugarsInput
-    ) {
+    if (mealsNameInput && caloriesInput && proteinInput && sugarsInput) {
       await createMealsEntry(
         mealsNameInput,
         caloriesInput,
@@ -240,8 +221,8 @@ export async function buildMealsContents(mealsObject, allUserMeals, focusedDate)
     }
   }
 
+  //todo - change this from accessing meals to accessing dailyMeals, and then fill in the meal time. maybe also change the condition 
   async function handleMealsInputChange() {
-
     for (let i = 0; i < allUserMeals.length; i++) {
       if (allUserMeals[i] === mealsNameInput.value) {
         console.log("match");
@@ -252,23 +233,22 @@ export async function buildMealsContents(mealsObject, allUserMeals, focusedDate)
         // console.log("mealData: ", mealData);
         const mealInfo = mealData.getAllMeals;
         if (!document.getElementById("mealsIngredientsSection")) {
-          openMealsIngredientsInputDropdownSection(handleMealsInputClick);
+          openMealsIngredientsInputDropdownSection(
+            handleMealsInputClick,
+            focusedDate,
+            allUserMeals
+          );
         }
 
         document.getElementById("mealTimeInput").value = mealInfo.mealTime;
         document.getElementById("caloriesInput").value = mealInfo.calories;
         document.getElementById("proteinInput").value = mealInfo.protein;
         document.getElementById("sugarsInput").value = mealInfo.sugars;
-      } else {
-        console.log(mealsNameInput.value);
-
-        //fetch the meal matching meal name and person id. Then update ingredient fields
       }
     }
-        console.log("here")
 
     allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
-    console.log("mealsNameInputDropdown: ",mealsNameInputDropdown)
     // buildMealsWindow();
   }
+  openMealsIngredientsInputDropdownSection(handleMealsInputClick, focusedDate, allUserMeals);
 }

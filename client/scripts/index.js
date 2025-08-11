@@ -6,15 +6,12 @@ const loginForm = document.getElementById("loginForm");
 import { serverURL } from "../helpers/serverURL.js";
 import { handleSubmitLogin } from "./components/users/handleSubmitLogin.js";
 import { getAllUserMeals } from "./components/meals/crud_functions/getAllUserMeals.js";
-import { getWorkoutEntriesByUserAndDate } from "./components/workout/crud_functions/getWorkoutEntriesByUserAndDate.js";
+
 import { buildCardioWindow } from "./components/cardio/buildCardioWindow.js";
-import { getCardioEntriesByUserAndDate } from "./components/cardio/crud_functions/getCardioEntriesByUserAndDate.js";
-import { getMealsEntriesByUserAndDate } from "./components/meals/crud_functions/getMealsEntriesByUserAndDate.js";
+
 import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
 import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
-import { fillMenuContents } from "./components/fillMenuContents.js";
-import {createMealsEntry} from "./components/meals/crud_functions/createMealsEntry.js"
-
+import { createDataObject } from "./components/createDataObject.js";
 
 //! ----------- Global Variables ---------------
 
@@ -170,9 +167,14 @@ async function createMainPage() {
 
       focusedDate = `${month}${date}${adjustedDate.getFullYear()}`;
 
-      console.log('changed focusedDate: ',focusedDate)
+      console.log("changed focusedDate: ", focusedDate);
       dateDisplay.innerText = dateDisplayInfo;
-      createDataObject(sessionStorage.userID, focusedDate);
+      createDataObject(
+        sessionStorage.userID,
+        focusedDate,
+        serverURL,
+        allUserMeals
+      );
     }
 
     function nextDate() {
@@ -197,7 +199,12 @@ async function createMainPage() {
       focusedDate = `${month}${date}${adjustedDate.getFullYear()}`;
 
       dateDisplay.innerText = dateDisplayInfo;
-      createDataObject(sessionStorage.userID, focusedDate);
+      createDataObject(
+        sessionStorage.userID,
+        focusedDate,
+        serverURL,
+        allUserMeals
+      );
     }
 
     function prevWeek() {
@@ -222,7 +229,12 @@ async function createMainPage() {
       focusedDate = `${month}${date}${adjustedDate.getFullYear()}`;
 
       dateDisplay.innerText = dateDisplayInfo;
-      createDataObject(sessionStorage.userID, focusedDate);
+      createDataObject(
+        sessionStorage.userID,
+        focusedDate,
+        serverURL,
+        allUserMeals
+      );
     }
 
     function nextWeek() {
@@ -247,73 +259,31 @@ async function createMainPage() {
       focusedDate = `${month}${date}${adjustedDate.getFullYear()}`;
 
       dateDisplay.innerText = dateDisplayInfo;
-      createDataObject(sessionStorage.userID, focusedDate);
+      createDataObject(
+        sessionStorage.userID,
+        focusedDate,
+        serverURL,
+        allUserMeals
+      );
     }
 
     header.after(prevNextSection);
 
-    createDataObject(sessionStorage.userID, focusedDate);
+    createDataObject(
+      sessionStorage.userID,
+      focusedDate,
+      serverURL,
+      allUserMeals
+    );
 
-    console.log("here")
     allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
-    console.log("there")
 
-    console.log("index.js - allUserMeals: ",allUserMeals)
     //? build function calls
     buildCardioWindow();
     buildWorkoutWindow();
     buildMealsWindow();
     // buildRoutinesWindow()
   }
-}
-
-async function createDataObject(userID, date) {
-  console.log("creating data object for: ", date)
-  let dataObject = {};
-
-  const workoutData = await getWorkoutEntriesByUserAndDate(
-    userID,
-    date,
-    serverURL
-  );
-  const workoutArray = await workoutData.getWorkoutRecords;
-
-  const cardioData = await getCardioEntriesByUserAndDate(
-    userID,
-    date,
-    serverURL
-  );
-  const cardioArray = await cardioData.getCardioRecords;
-
-  const mealsData = await getMealsEntriesByUserAndDate(userID, date, serverURL);
-  const mealsDataArray = await mealsData.getMealsRecords;
-
-  dataObject.workout = workoutArray;
-  dataObject.cardio = cardioArray;
-  dataObject.meals = mealsDataArray;
-
-  fillMenuContents(
-    serverURL,
-    dataObject,
-    focusedDate,
-    allUserMeals
-  );
-
-    //!temporary test button section:
-  const createMealBtn = document.createElement("button");
-  createMealBtn.id = "createMealBtn";
-  createMealBtn.textContent = "create meal";
-  if (!document.getElementById("createMealBtn")) {
-    document.getElementById("navbar").after(createMealBtn);
-  }
-
-  createMealBtn.addEventListener("click", () => {
-    const calories = "200";
-    const protein = 20;
-    const sugars = 20;
-    const mealName = "Testname";
-    createMealsEntry(mealName, calories, protein, sugars, serverURL);
-  });
 }
 
 //! Begin

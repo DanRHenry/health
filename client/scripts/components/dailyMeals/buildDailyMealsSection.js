@@ -1,6 +1,9 @@
-export async function buildDailyMealsSection () {
+    import { createDailyMealsEntry } from "../dailyMeals/crud_functions/createDailyMealsEntry.js"
+
+export async function buildDailyMealsSection (focusedDate) {
     const dailyMealsSection = document.createElement("div")
     dailyMealsSection.id = "dailyMealsSection"
+
 
     /* 
     add new meal
@@ -11,6 +14,7 @@ export async function buildDailyMealsSection () {
     addBtn.innerText = "Add"
     addBtn.addEventListener("click",() => {
         console.log('add...')
+        createDailyMealsEntry(focusedDate)
     })
 
     const updateDefaultMealBtn = document.createElement("button")

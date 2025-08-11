@@ -1,5 +1,4 @@
 export async function getWorkoutEntriesByUserAndDate(userID, date, serverURL) {
-  console.log(userID, date)
   const URL = `${serverURL}/workout/find${userID}/${date}`;
 
   const res = await fetch(URL, {

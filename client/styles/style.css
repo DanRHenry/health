@@ -278,3 +278,9 @@ th {
   /* border-bottom-right-radius: .5em; */
   /* border-bottom-left-radius: .5em; */
 }
+
+#dailyMealsSection{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+}
