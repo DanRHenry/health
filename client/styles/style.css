@@ -247,8 +247,12 @@ display: flex;
 }
 
 #mealsSection > table > tr > td > *, #mealsSection > table > tr > th > *{
-  width: 90%;
+  /* width: 90%; */
   max-width: 90%;
+}
+
+#mealsSection > table > tr > * {
+  width: calc(100vw /3);
 }
 
 th {
