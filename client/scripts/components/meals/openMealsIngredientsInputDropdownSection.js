@@ -116,7 +116,9 @@ export function openMealsIngredientsInputDropdownSection(
     const mealsNameInput = document.getElementById("mealsNameInput").value;
 
     const caloriesInput = document.getElementById("caloriesInput").value;
-
+  
+    createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
+    
     // const proteinInput = document.getElementById("proteinInput")?.value;
 
     // const sugarsInput = document.getElementById("sugarsInput")?.value;
@@ -149,7 +151,7 @@ export function openMealsIngredientsInputDropdownSection(
         });
         noBtn.addEventListener("click", () => {
           console.log("adding meal to today's meals")
-          createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
+          // createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
           updateConfirmationLine.remove();
         });
         updateConfirmationLine.append(yesBtn, noBtn);

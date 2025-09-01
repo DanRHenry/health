@@ -16,32 +16,17 @@ router.post("/create", async (req, res) => {
     const { mealTime, calories, protein, sugars, date, userID, mealName } =
       req.body;
 
-      // let index = 0;
-
-    // const findAllInstancesOfDailyMeal = await DailyMeals.find({
-    //   mealName: mealName,
-    //   userID: userID,
-    // })
-
-    // console.log("dailyMeals: ",findAllInstancesOfDailyMeal)
-
-    // index = findAllInstancesOfDailyMeal.length
-
-
-    // console.log("index: ",index)
     let dailyMeal = new DailyMeals({
-      // index: index,
       mealName: mealName,
       mealTime: mealTime,
       calories: calories,
-      protein: protein,
-      sugars: sugars,
+      // protein: protein,
+      // sugars: sugars,
       date: date,
       userID: userID,
     });
 
-    // console.log("dailyMeal: ",dailyMeal)
-          const newDailyMeal = await dailyMeal.save()
+      const newDailyMeal = await dailyMeal.save()
 
       res.status(200).json({
         newDailyMeal: newDailyMeal,

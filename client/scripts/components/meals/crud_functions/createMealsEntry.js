@@ -11,8 +11,8 @@ export async function createMealsEntry(
   const mealsEntryBody = JSON.stringify({
     mealName: mealsNameInput,
     calories: caloriesInput,
-    protein: proteinInput,
-    sugars: sugarsInput,
+    // protein: proteinInput,
+    // sugars: sugarsInput,
     userID: sessionStorage.userID,
   });
 

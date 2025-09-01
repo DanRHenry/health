@@ -1,7 +1,7 @@
 import { serverURL } from "../../../../helpers/serverURL.js";
 export async function getMealsEntriesByUserAndDate(userID, date) {
   try{
-  const URL = `${serverURL}/meals/find${userID}/${date}`;
+  const URL = `${serverURL}/meals/findmealbydateandid${userID}/${date}`;
   const res = await fetch(URL, {
     method: "GET",
     mode: "cors",

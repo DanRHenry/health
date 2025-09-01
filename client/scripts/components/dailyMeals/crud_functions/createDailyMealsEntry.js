@@ -8,11 +8,7 @@ import { getAllUserMeals } from "../../meals/crud_functions/getAllUserMeals.js";
 import { fillDailyMealsContent } from "../fillDailyMealsContent.js";
 export async function createDailyMealsEntry(focusedDate, mealName, mealTime, calories) {
   const URL = `${serverURL}/dailymeals/create`;
-  // const mealName = document.getElementById("mealsNameInput")?.value;
-  // const mealTime = document.getElementById("meal-time-choice").value;
-  // const calories = document.getElementById("caloriesInput")?.value;
-  // const protein = document.getElementById("proteinInput")?.value;
-  // const sugars = document.getElementById("sugarsInput")?.value;
+
   const userID = sessionStorage.userID;
   const date = focusedDate;
 

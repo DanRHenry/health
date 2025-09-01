@@ -27,11 +27,14 @@ router.post("/create", async (req, res) => {
       mealName: mealName,
     });
 
+    console.log("checking for entry: ",checkForExistingMealsEntry)
+
     if (checkForExistingMealsEntry) {
       res.status(200).json({
         message: "Meal Entry Already There",
       });
     } else {
+      console.log("meal:",meal)
       const newMeal = await meal.save();
 
       res.status(200).json({
