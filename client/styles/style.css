@@ -285,6 +285,8 @@ th {
   text-shadow: 1px 1px black;
   padding-bottom: 1em;
   padding-top: 1em;
+  min-height: fit-content;
+  height: 100vh;
   /* border-bottom-right-radius: .5em; */
   /* border-bottom-left-radius: .5em; */
 }
