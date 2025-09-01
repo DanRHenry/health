@@ -4,7 +4,6 @@ const MealsSchema = new mongoose.Schema({
     mealName: {
         type: String,
         required: true,
-        unique: true
     },
     calories: {
         type: Number,
