@@ -87,6 +87,8 @@ export async function buildMealsContents(
   const mealsIngredientsInputDropdownBtn = document.createElement("button");
   mealsIngredientsInputDropdownBtn.id = "mealsIngredientsInputDropdownBtn";
   mealsIngredientsInputDropdownBtn.innerText = "^";
+    mealsIngredientsInputDropdownBtn.style.zIndex = "-1"
+  mealsIngredientsInputDropdownBtn.style.visibility = "hidden"
   mealsIngredientsInputDropdownBtn.addEventListener(
     "click", () => {
       // console.log("allUserMeals: ",allUserMeals)
@@ -237,6 +239,7 @@ const info = await getDailyMealsEntries(focusedDate)
 
     // buildDailyMealsSection()
   }
-  
+
   mealsIngredientsInputDropdownBtn.click()
+
 }
