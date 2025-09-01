@@ -1,3 +1,5 @@
+import { serverURL } from "../../../../helpers/serverURL.js";
+
 export async function updateMealsEntry(mealsUpdateObject) {
   try{
   console.log("mealsUpdateObject: ", mealsUpdateObject);
@@ -8,11 +10,10 @@ export async function updateMealsEntry(mealsUpdateObject) {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
+      "authorization": sessionStorage.token
     },
     body: JSON.stringify({ updateInfo: mealsUpdateObject,
-      "authorization": sessionStorage.token
      }),
-    
   });
   const data = await res.json();
   console.log(data);

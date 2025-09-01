@@ -1,8 +1,16 @@
 import { closeMealsIngredientsInputDropdownSection } from "./closeMealsIngredientsInputDropdownSection.js";
-import {buildDailyMealsSection} from "../dailyMeals/buildDailyMealsSection.js"
+import { createMealsEntry } from "../meals/crud_functions/createMealsEntry.js"
+import { buildDailyMealsSection } from "../dailyMeals/buildDailyMealsSection.js";
+import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
+import { createDataObject } from "../createDataObject.js";
+import {updateMealsEntry} from "../meals/crud_functions/updateMealsEntry.js";
+import { createDailyMealsEntry} from "../dailyMeals/crud_functions/createDailyMealsEntry.js"
 
-
-export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, focusedDate, allUserMeals) {
+export function openMealsIngredientsInputDropdownSection(
+  // handleMealsInputClick,
+  focusedDate,
+  allUserMeals
+) {
   document
     .getElementById("mealsIngredientsInputDropdownBtn")
     .removeEventListener("click", openMealsIngredientsInputDropdownSection);
@@ -18,7 +26,7 @@ export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, 
   //   );
 
   // mealsIngredientsInputDropdown.style.height = "30vh"
-  console.log("clicked");
+  // console.log("clicked");
   const mealsIngredientsSection = document.createElement("div");
   mealsIngredientsSection.id = "mealsIngredientsSection";
 
@@ -29,6 +37,36 @@ export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, 
   const mealTimeInput = document.createElement("input");
   mealTimeInput.addEventListener("keydown", handleMealsInputClick);
   mealTimeInput.id = "mealTimeInput";
+  mealTimeInput.name = "mealTimeInput";
+  mealTimeInput.setAttribute("list", "meal-time-choices")
+  // mealTimeInput.list = "meal-time-choices";
+  mealTimeInput.id = "meal-time-choice";
+  mealTimeInput.autocomplete = "off"
+
+  mealTimeInput.addEventListener("click", () => {
+        if (mealTimeInput.value !== "") {
+      mealTimeInput.value = "";
+      mealTimeInput.blur();
+      mealTimeInput.focus();
+      // mealTimeInput.click()
+    }
+  })
+
+  const mealTimeOptions = document.createElement("datalist");
+  mealTimeOptions.id = "meal-time-choices";
+  const breakfastOption = document.createElement("option");
+  breakfastOption.value = "Breakfast";
+  const lunchOption = document.createElement("option");
+  lunchOption.value = "Lunch";
+  const dinnerOption = document.createElement("option");
+  dinnerOption.value = "Dinner";
+  const snackOption = document.createElement("option");
+  snackOption.value = "Snack";
+
+  mealTimeOptions.append(breakfastOption, lunchOption, dinnerOption, snackOption)
+
+  mealTimeInput.appendChild(mealTimeOptions)
+
   mealTimeRow.append(mealTimeLabel, mealTimeInput);
 
   const caloriesRow = document.createElement("div");
@@ -38,6 +76,7 @@ export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, 
   const caloriesInput = document.createElement("input");
   caloriesInput.addEventListener("keydown", handleMealsInputClick);
   caloriesInput.id = "caloriesInput";
+
   caloriesRow.append(caloriesLabel, caloriesInput);
 
   const proteinRow = document.createElement("div");
@@ -61,10 +100,77 @@ export function openMealsIngredientsInputDropdownSection(handleMealsInputClick, 
   mealsIngredientsSection.append(
     mealTimeRow,
     caloriesRow,
-    proteinRow,
-    sugarsRow
+    // proteinRow,
+    // sugarsRow
   );
 
+  // buildDailyMealsSection(focusedDate);
+
   mealsTable.after(mealsIngredientsSection);
-  buildDailyMealsSection(focusedDate)
+
+    async function handleMealsInputClick(e) {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    const mealsNameInput = document.getElementById("mealsNameInput").value;
+
+    const caloriesInput = document.getElementById("caloriesInput").value;
+
+    // const proteinInput = document.getElementById("proteinInput")?.value;
+
+    // const sugarsInput = document.getElementById("sugarsInput")?.value;
+
+    // const allUserMeals = await getAllUserMeals(focusedDate)
+    // console.log(focusedDate)
+    // console.log("allUserMeals: ",allUserMeals)
+    // console.log(mealsNameInput)
+    for (let i = 0; i < allUserMeals.length; i++) {
+      if (allUserMeals[i] === mealsNameInput) {
+        console.log("match");
+        const updateConfirmationLine = document.createElement("div");
+        updateConfirmationLine.id = "mealUpdateConfirmationLine";
+        updateConfirmationLine.innerText =
+          "Do you want to update the existing entry?";
+        const yesBtn = document.createElement("button");
+        yesBtn.innerText = "Yes";
+        const noBtn = document.createElement("button");
+        noBtn.innerText = "No";
+        yesBtn.addEventListener("click", () => {
+          updateMealsEntry({
+            mealName: mealsNameInput,
+            mealTime: mealTimeInput,
+            calories: caloriesInput,
+            // protein: proteinInput,
+            // sugars: sugarsInput,
+            userID: sessionStorage.userID,
+            date: focusedDate,
+          });
+        });
+        noBtn.addEventListener("click", () => {
+          console.log("adding meal to today's meals")
+          createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
+          updateConfirmationLine.remove();
+        });
+        updateConfirmationLine.append(yesBtn, noBtn);
+        if (!document.getElementById("mealUpdateConfirmationLine")) {
+          mealsSection.append(updateConfirmationLine);
+          // yesBtn.focus()
+        }
+        return;
+      }
+    }
+
+    // if (mealsNameInput && caloriesInput && proteinInput && sugarsInput) {
+        if (mealsNameInput && caloriesInput) {
+      await createMealsEntry(
+        mealsNameInput,
+        caloriesInput,
+        // proteinInput,
+        // sugarsInput
+      );
+
+      await createDataObject(sessionStorage.userID, focusedDate);
+    }
+  }
 }

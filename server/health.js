@@ -37,7 +37,7 @@ app.use("/api/health/workout", workoutController)
 app.use("/api/health/meals", mealsController)
 
 // unused
-app.use("/api/health/dailyMeals", dailyMealsController)
+app.use("/api/health/dailymeals", dailyMealsController)
 
 app.listen(PORT, () => {
     console.log(`The health app server is running on port: ${PORT}`)

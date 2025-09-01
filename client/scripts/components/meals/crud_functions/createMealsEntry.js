@@ -1,9 +1,10 @@
+import { serverURL } from "../../../../helpers/serverURL.js";
+
 export async function createMealsEntry(
   mealsNameInput,
   caloriesInput,
   proteinInput,
   sugarsInput,
-  serverURL
 ) {
 
   try {

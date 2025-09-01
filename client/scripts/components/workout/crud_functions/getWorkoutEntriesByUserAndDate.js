@@ -1,4 +1,5 @@
-export async function getWorkoutEntriesByUserAndDate(userID, date, serverURL) {
+import { serverURL } from "../../../../helpers/serverURL.js";
+export async function getWorkoutEntriesByUserAndDate(userID, date) {
   try{
   const URL = `${serverURL}/workout/find${userID}/${date}`;
 

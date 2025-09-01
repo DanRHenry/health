@@ -2,13 +2,19 @@ import { openMealsIngredientsInputDropdownSection } from "./openMealsIngredients
 import { findMealEntryByMealNameAndUserID } from "./crud_functions/findMealEntryByMealNameAndUserID.js";
 import { serverURL } from "../../../helpers/serverURL.js";
 import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
-import { getMealsByDay } from "./crud_functions/getMealsByDay.js";
+import { buildMealsSection } from "./buildMealsSection.js";
+import { getDailyMealsEntries } from "../dailyMeals/crud_functions/getDailyMealsEntries.js";
+// import { buildDailyMealsSection } from "../dailyMeals/buildDailyMealsSection.js";
+import {createDailyMealsEntry} from "../dailyMeals/crud_functions/createDailyMealsEntry.js"
 
 export async function buildMealsContents(
   mealsObject,
   allUserMeals,
   focusedDate
 ) {
+      allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
+      // console.log("buildingMealsContents...")
+      // console.log("allUserMeals: ",allUserMeals)
   mealsSection.innerHTML = "";
   const mealsTable = document.createElement("table");
   mealsTable.id = "mealsTable";
@@ -28,7 +34,7 @@ export async function buildMealsContents(
   mealsIngredientsHeader.className = "mealsHeaders";
 
   mealsRow.append(mealsCheckHeader, mealsNameHeader, mealsIngredientsHeader);
-  //---------------------------
+
   const mealsInputRow = document.createElement("tr");
 
   const mealsInputBtn = document.createElement("td");
@@ -46,8 +52,16 @@ export async function buildMealsContents(
   mealsNameInput.name = "mealsNameInput";
   mealsNameInput.spellcheck = "false";
   mealsNameInput.autocomplete = "off";
-  mealsNameInput.addEventListener("keydown", handleMealsInputClick);
+  
+  // mealsNameInput.addEventListener("keydown", handleMealsInputClick);
   mealsNameInput.addEventListener("change", handleMealsInputChange);
+  mealsNameInput.addEventListener("click", () => {
+    if (mealsNameInput.value !== "") {
+      mealsNameInput.value = "";
+      mealsNameInput.blur();
+      mealsNameInput.focus();
+    }
+  });
 
   const mealsNameInputDropdown = document.createElement("datalist");
   mealsNameInputDropdown.id = "mealsNameInputDropdown";
@@ -74,8 +88,13 @@ export async function buildMealsContents(
   mealsIngredientsInputDropdownBtn.id = "mealsIngredientsInputDropdownBtn";
   mealsIngredientsInputDropdownBtn.innerText = "^";
   mealsIngredientsInputDropdownBtn.addEventListener(
-    "click",
-    openMealsIngredientsInputDropdownSection
+    "click", () => {
+      // console.log("allUserMeals: ",allUserMeals)
+          openMealsIngredientsInputDropdownSection(
+            focusedDate,
+            allUserMeals
+          );
+    }
   );
 
   mealsIngredientsInputLocation.append(mealsIngredientsInputDropdownBtn);
@@ -88,8 +107,24 @@ export async function buildMealsContents(
     // mealsProteinInputLocation,
     // mealsSugarsInputLocation
   );
-  //------------------------
-  mealsTable.append(mealsRow, mealsInputRow);
+
+  const dailyMealsHeadersRow = document.createElement("tr")
+
+  const dailyMealNameHeader = document.createElement("th")
+  dailyMealNameHeader.innerText = "Name"
+  // dailyMealNameHeader.className = "mealsHeaders"
+
+  const dailyMealTimeHeader = document.createElement("th")
+  dailyMealTimeHeader.innerText = "Type"
+  // dailyMealTimeHeader.className = "mealsHeaders"
+
+  const dailyMealCaloriesHeader = document.createElement("th")
+  dailyMealCaloriesHeader.innerText = "Cals"
+  // dailyMealCaloriesHeader.className = "mealsHeaders"
+
+  dailyMealsHeadersRow.append(dailyMealNameHeader, dailyMealTimeHeader, dailyMealCaloriesHeader)
+
+  mealsTable.append(mealsRow, mealsInputRow, dailyMealsHeadersRow);
 
   mealsSection.append(mealsTable);
 
@@ -161,94 +196,46 @@ export async function buildMealsContents(
     }
   }
 
-  async function handleMealsInputClick(e) {
-    if (e.key !== "Enter") {
-      return;
-    }
-    const mealsNameInput = document.getElementById("mealsNameInput").value;
 
-    const mealTimeInput = document.getElementById("mealTimeInput").value;
+const info = await getDailyMealsEntries(focusedDate)
 
-    const caloriesInput = document.getElementById("caloriesInput").value;
-
-    const proteinInput = document.getElementById("proteinInput").value;
-
-    const sugarsInput = document.getElementById("sugarsInput").value;
-
-    for (let i = 0; i < allUserMeals.length; i++) {
-      if (allUserMeals[i] === document.getElementById("mealsNameInput").value) {
-        console.log("match");
-        const updateConfirmationLine = document.createElement("div");
-        updateConfirmationLine.id = "mealUpdateConfirmationLine";
-        updateConfirmationLine.innerText =
-          "Do you want to update the existing entry?";
-        const yesBtn = document.createElement("button");
-        yesBtn.innerText = "Yes";
-        const noBtn = document.createElement("button");
-        noBtn.innerText = "No";
-        yesBtn.addEventListener("click", () => {
-          updateMealsEntry({
-            mealName: mealsNameInput,
-            mealTime: mealTimeInput,
-            calories: caloriesInput,
-            protein: proteinInput,
-            sugars: sugarsInput,
-            userID: sessionStorage.userID,
-            date: focusedDate,
-          });
-        });
-        noBtn.addEventListener("click", () => {
-          updateConfirmationLine.remove();
-        });
-        updateConfirmationLine.append(yesBtn, noBtn);
-        if (!document.getElementById("mealUpdateConfirmationLine")) {
-          mealsSection.append(updateConfirmationLine);
-          // yesBtn.focus()
-        }
-        return;
-      }
-    }
-
-    if (mealsNameInput && caloriesInput && proteinInput && sugarsInput) {
-      await createMealsEntry(
-        mealsNameInput,
-        caloriesInput,
-        proteinInput,
-        sugarsInput
-      );
-
-      await createDataObject(sessionStorage.userID, focusedDate);
-    }
-  }
-
-  //todo - change this from accessing meals to accessing dailyMeals, and then fill in the meal time. maybe also change the condition 
   async function handleMealsInputChange() {
     for (let i = 0; i < allUserMeals.length; i++) {
       if (allUserMeals[i] === mealsNameInput.value) {
-        console.log("match");
+        // console.log("match");
         const mealData = await findMealEntryByMealNameAndUserID(
-          mealsNameInput.value,
+          allUserMeals[i],
           serverURL
         );
         // console.log("mealData: ", mealData);
         const mealInfo = mealData.getAllMeals;
+
+        console.log(mealInfo)
         if (!document.getElementById("mealsIngredientsSection")) {
+          console.log("focusedDateOutput: ",focusedDate)
           openMealsIngredientsInputDropdownSection(
-            handleMealsInputClick,
+            // handleMealsInputClick,
             focusedDate,
             allUserMeals
           );
         }
+        // console.log(mealInfo)
+        console.log(mealInfo.calories)
+        // console.log(mealInfo.mealTime)
 
-        document.getElementById("mealTimeInput").value = mealInfo.mealTime;
-        document.getElementById("caloriesInput").value = mealInfo.calories;
-        document.getElementById("proteinInput").value = mealInfo.protein;
-        document.getElementById("sugarsInput").value = mealInfo.sugars;
+        // const mealTimeInput = document.getElementById("mealTimeInput")
+        // mealTimeInput.value = mealInfo.mealTime;
+
+        const caloriesInput = document.getElementById("caloriesInput")
+         caloriesInput.value = mealInfo.calories;
+        // document.getElementById("proteinInput").value = mealInfo.protein;
+        // document.getElementById("sugarsInput").value = mealInfo.sugars;
       }
     }
+    const dailyMeals = await getDailyMealsEntries(focusedDate)
+    console.log(dailyMeals)
 
-    allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
-    // buildMealsWindow();
+    // buildDailyMealsSection()
   }
-  openMealsIngredientsInputDropdownSection(handleMealsInputClick, focusedDate, allUserMeals);
+  mealsIngredientsInputDropdownBtn.click()
 }

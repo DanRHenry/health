@@ -10,7 +10,7 @@ import { getAllUserMeals } from "./components/meals/crud_functions/getAllUserMea
 import { buildCardioWindow } from "./components/cardio/buildCardioWindow.js";
 
 import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
-import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
+import { buildMealsSection } from "./components/meals/buildMealsSection.js";
 import { createDataObject } from "./components/createDataObject.js";
 
 //! ----------- Global Variables ---------------
@@ -267,7 +267,35 @@ async function createMainPage() {
       );
     }
 
-    header.after(prevNextSection);
+    const dailyInfoLine = document.createElement('div')
+    dailyInfoLine.id = "dailyInfoLine"
+
+    const calories = document.createElement('div')
+    const dailyCalories = document.createElement("span")
+    dailyCalories.name = "dailyCalories"
+    dailyCalories.id = "dailyCalories"
+    dailyCalories.innerText = "0"
+
+    const dailyCaloriesLabel = document.createElement('span')
+    dailyCaloriesLabel.innerText = "Cals"
+    // dailyCaloriesLabel.setAttribute("for", "dailyCalories")
+
+    const weight = document.createElement("div")
+
+    const dailyWeight = document.createElement("span")
+    dailyWeight.name = "dailyWeight"
+    dailyWeight.id = "dailyWeight"
+    dailyWeight.innerText = "0"
+
+    const dailyWeightLabel = document.createElement("span")
+    dailyWeightLabel.innerText = "Weight"
+    // dailyWeightLabel.setAttribute("for", "dailyWeight")
+
+    calories.append(dailyCaloriesLabel, dailyCalories)
+    weight.append(dailyWeightLabel, dailyWeight)
+    dailyInfoLine.append(calories, weight)
+
+    header.after(dailyInfoLine, prevNextSection);
 
     createDataObject(
       sessionStorage.userID,
@@ -279,9 +307,10 @@ async function createMainPage() {
     allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
 
     //? build function calls
-    buildCardioWindow();
-    buildWorkoutWindow();
-    buildMealsWindow();
+    // buildCardioWindow();
+    // buildWorkoutWindow();
+    buildMealsSection();
+    document.getElementById("mealsTitle").click()
     // buildRoutinesWindow()
   }
 }

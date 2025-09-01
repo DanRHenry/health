@@ -1,4 +1,6 @@
-export async function getCardioEntriesByUserAndDate(userID, date, serverURL) {
+import { serverURL } from "../../../../helpers/serverURL.js";
+
+export async function getCardioEntriesByUserAndDate(userID, date) {
   try {
   const URL = `${serverURL}/cardio/find${userID}/${date}`;
 

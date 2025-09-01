@@ -9,6 +9,16 @@ body {
   }
 }
 
+#dailyInfoLine {
+  display: flex;
+  justify-content: space-evenly;
+  /* flex-direction: column; */
+}
+
+#dailyInfoLine > div > span {
+  margin: 1rem;
+}
+
 #prevNextSection {
   display: flex;
   flex-direction: row;

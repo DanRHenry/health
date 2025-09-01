@@ -1,4 +1,5 @@
-export async function getAllUserMeals(serverURL) {  
+import { serverURL } from "../../../../helpers/serverURL.js";
+export async function getAllUserMeals() {  
   try{
   const allUserMeals = []
   const res = await fetch(

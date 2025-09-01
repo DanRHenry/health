@@ -1,4 +1,5 @@
-export async function getMealsEntriesByUserAndDate(userID, date, serverURL) {
+import { serverURL } from "../../../../helpers/serverURL.js";
+export async function getMealsEntriesByUserAndDate(userID, date) {
   try{
   const URL = `${serverURL}/meals/find${userID}/${date}`;
   const res = await fetch(URL, {

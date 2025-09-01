@@ -1,5 +1,6 @@
+import { buildDailyMealsSection } from "../dailyMeals/buildDailyMealsSection.js";
 import {toggleMealsSectionMenu} from "./toggleMealsSectionMenu.js"
-export function buildMealsWindow() {
+export function buildMealsSection() {
   const mealsSectionTop = document.createElement("div");
   mealsSectionTop.id = "mealsSectionTop";
   mealsSectionTop.addEventListener("click", toggleMealsSectionMenu);
@@ -19,4 +20,6 @@ export function buildMealsWindow() {
 
   prevNextSection.after(mealsSectionTop);
   mealsSectionTop.after(mealsSection);
+
+  // buildDailyMealsSection()
 }
