@@ -8,16 +8,16 @@ export async function fillMenuContents(serverURL, object, focusedDate, allUserMe
   console.log("fillingMenuContents...")
 
   //! Workout
-  // buildWorkoutContents(object.workout);
+  // await buildWorkoutContents(object.workout);
 
   //! Cardio
-  // buildCardioContents(object.cardio);
+  // await buildCardioContents(object.cardio);
   
   //! Meals
-  buildMealsContents(object.meals, allUserMeals, focusedDate);
+  await buildMealsContents(object.meals, allUserMeals, focusedDate);
 
   //! DailyMeals
   // buildDailyMealsSection(focusedDate)
 
-  fillDailyMealsContent(focusedDate)
+  await fillDailyMealsContent(focusedDate)
 }

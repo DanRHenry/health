@@ -237,5 +237,6 @@ const info = await getDailyMealsEntries(focusedDate)
 
     // buildDailyMealsSection()
   }
+  
   mealsIngredientsInputDropdownBtn.click()
 }
