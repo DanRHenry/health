@@ -82,7 +82,7 @@ body {
   height: 0;
   min-height: 0;
   /* background-color: rgb(114, 114, 255); */
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: min-height 0.25s ease;}
 
 #cardioSection > table, #mealsSection > table {
@@ -286,7 +286,7 @@ th {
   padding-bottom: 1em;
   padding-top: 1em;
   min-height: fit-content;
-  height: 100vh;
+  /* height: 100vh; */
   /* border-bottom-right-radius: .5em; */
   /* border-bottom-left-radius: .5em; */
 }
