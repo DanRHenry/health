@@ -30,6 +30,11 @@ body {
   justify-content: space-evenly;
 }
 
+#maxCaloriesLine > div {
+  display: flex;
+  align-items: center;
+}
+
 #prevNextSection > button,
 #prevNextSection > span {
   /* justify-self: center; */
