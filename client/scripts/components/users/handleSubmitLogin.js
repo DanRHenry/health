@@ -32,6 +32,7 @@ export async function handleSubmitLogin(serverURL, createMainPage) {
   } else {
     sessionStorage.setItem("token", data.token);
     sessionStorage.setItem("userID", data.user._id);
+    sessionStorage.setItem("weight", data.user.weight)
     console.log("creating main page...");
 
     createMainPage();

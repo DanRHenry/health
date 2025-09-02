@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         required: false
     },
     weight: {
-        type: Array,
+        type: Number,
         required: false
     },
     age: {

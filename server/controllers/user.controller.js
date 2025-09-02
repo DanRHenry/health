@@ -97,4 +97,37 @@ router.get("/find", requireValidation, async (req, res) => {
   }
 });
 
+router.patch("/update:id", requireValidation, async (req, res) => {
+  try {
+    const {id} = req.params;
+    console.log(id)
+
+    const update = req.body;
+    console.log(update)
+    
+    const findUser = await User.findOne({ _id: id });
+
+    if (!findUser) {
+      res.status(404).json({
+        message: `User Not Found.`
+      })
+    }
+
+    const updatedUser = await User.findOneAndUpdate({_id: id}, update)
+    
+    console.log(updatedUser)
+
+    updatedUser
+      ? res.status(200).json({
+        message: `User has been updated successfully.`,
+        updatedUser
+      })
+      : res.status(520).json({
+        message: "Unable to update user."
+      })
+  } catch (err) {
+    serverError(res, err);
+  }
+})
+
 module.exports = router;

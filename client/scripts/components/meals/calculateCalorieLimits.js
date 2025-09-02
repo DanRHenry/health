@@ -77,7 +77,7 @@ export function calculateCalorieLimits() {
   const cals = Number(document.getElementById("dailyCalories").innerText);
 
   const height = "6_2";
-  const weight = 252;
+  const weight = sessionStorage.weight;
 
   const calorieLimitsRange = calorieLimits[height][Math.floor(weight * 0.1) * 10]
 

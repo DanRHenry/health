@@ -15,6 +15,7 @@ import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
 import { buildMealsSection } from "./components/meals/buildMealsSection.js";
 // import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
 import { createDataObject } from "./components/createDataObject.js";
+import { handleUpdateWeight } from "./components/users/handleUpdateWeight.js";
 
 //! ----------- Global Variables ---------------
 
@@ -241,10 +242,13 @@ async function createMainPage() {
     const dailyWeight = document.createElement("span");
     dailyWeight.name = "dailyWeight";
     dailyWeight.id = "dailyWeight";
-    dailyWeight.innerText = "0";
+    dailyWeight.innerText = sessionStorage.weight;
+    dailyWeight.addEventListener("click", handleWeightClick)
+
 
     const dailyWeightLabel = document.createElement("span");
     dailyWeightLabel.innerText = "Weight";
+    dailyWeightLabel.id = "weightLabel"
     // dailyWeightLabel.setAttribute("for", "dailyWeight")
 
     calories.append(dailyCaloriesLabel, dailyCalories);
@@ -332,6 +336,7 @@ async function createMainPage() {
     document.getElementById("mealsTitle").click();
     // buildRoutinesWindow()
   }
+      calculateCalorieLimits()
 }
 
 function updateCalories() {
@@ -345,6 +350,47 @@ function updateCalories() {
   // console.log("total daily calories: ", total);
   document.getElementById("dailyCalories").innerText = total;
     calculateCalorieLimits();
+}
+
+async function handleWeightClick() {
+  const dailyWeight = document.getElementById("dailyWeight")
+
+  const weightPlaceholder = dailyWeight.innerText
+
+  dailyWeight.remove()
+
+  const weightInput = document.createElement("input")
+  weightInput.id = "weightInput"
+  weightInput.placeholder = weightPlaceholder
+
+  // dailyWeight.value = weightInput
+  // dailyWeight.removeEventListener("click", handleWeightClick)
+  const weightLabel = document.getElementById("weightLabel")
+  weightLabel.after(weightInput)
+
+  weightInput.addEventListener("keydown", (e) => {
+
+      // console.log(weightInput.value)
+
+    if (e.key === "Enter") {
+          const newWeight = weightInput.value;
+
+      weightInput.remove()
+          const dailyWeight = document.createElement("span");
+    dailyWeight.name = "dailyWeight";
+    dailyWeight.id = "dailyWeight";
+    dailyWeight.innerText = newWeight;
+
+    handleUpdateWeight(newWeight)
+    
+
+    console.log("newWeight: ", newWeight)
+    weightLabel.after(dailyWeight)
+    dailyWeight.addEventListener("click", handleWeightClick)
+
+    
+    }
+  })
 }
 
 //! Begin

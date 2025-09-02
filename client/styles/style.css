@@ -36,6 +36,18 @@ body {
   align-items: center;
 }
 
+.mealsHeaders {
+  padding-top: 10px;
+}
+
+.mealsHeaders:first-child{
+  visibility: hidden;
+}
+
+.mealsHeaders:last-child{
+  visibility: hidden;
+}
+
 #prevNextSection > button,
 #prevNextSection > span {
   /* justify-self: center; */
