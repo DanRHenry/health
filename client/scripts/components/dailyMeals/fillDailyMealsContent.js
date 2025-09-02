@@ -1,4 +1,5 @@
 import { serverURL } from "../../../helpers/serverURL.js";
+import { calculateCalorieLimits } from "../meals/calculateCalorieLimits.js";
 import { deleteDailyMealsEntry } from "./crud_functions/deleteDailyMealsEntry.js";
 import { getDailyMealsEntries } from "./crud_functions/getDailyMealsEntries.js";
 
@@ -25,7 +26,7 @@ export async function fillDailyMealsContent(focusedDate) {
   // console.log(dailyMeals.length)
   // console.log(dailyMeals)
 
-  dailyMeals.map((meal) => {
+  dailyMeals?.map((meal) => {
 
         // console.log("record", meal);
 
@@ -44,7 +45,7 @@ export async function fillDailyMealsContent(focusedDate) {
         //todo find out why this sometimes results in null promise
         //todo "Cannot read properties of null (reading 'appendChild')"
     document.getElementById("mealsTable").appendChild(row);
-    
+
     row.append(mealName, mealTime, calories);
 
     row.addEventListener("click", () => {
@@ -91,7 +92,6 @@ export async function fillDailyMealsContent(focusedDate) {
   //     }
   //   });
   // }
-
   const mealCalories = document.getElementsByClassName("dailyMealCalories");
 
   let total = 0;
@@ -101,6 +101,8 @@ export async function fillDailyMealsContent(focusedDate) {
   }
   // console.log("total daily calories: ", total);
   document.getElementById("dailyCalories").innerText = total;
+
+  calculateCalorieLimits()
     } catch (err) {
     console.log(err)
   }

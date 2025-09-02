@@ -6,11 +6,14 @@ const loginForm = document.getElementById("loginForm");
 import { serverURL } from "../helpers/serverURL.js";
 import { handleSubmitLogin } from "./components/users/handleSubmitLogin.js";
 import { getAllUserMeals } from "./components/meals/crud_functions/getAllUserMeals.js";
+import { calculateCalorieLimits } from "./components/meals/calculateCalorieLimits.js";
 
 import { buildCardioWindow } from "./components/cardio/buildCardioWindow.js";
 
 import { buildWorkoutWindow } from "./components/workout/buildWorkoutWindow.js";
+
 import { buildMealsSection } from "./components/meals/buildMealsSection.js";
+// import { buildMealsWindow } from "./components/meals/buildMealsWindow.js";
 import { createDataObject } from "./components/createDataObject.js";
 
 //! ----------- Global Variables ---------------
@@ -35,65 +38,6 @@ let dateDisplayInfo = `${adjustedMonth}/${today.getDate()}/${today.getFullYear()
 let focusedDate = `${month}${date}${today.getFullYear()}`;
 
 let allUserMeals = [];
-
-const calorieLimits = {
-  "6_2": {
-    260: {
-      maintain: 2554,
-      losehalf: 2304,
-      loseone: 2054,
-      losetwo: 1554,
-    },
-    250: {
-      maintain: 2494,
-      losehalf: 2244,
-      loseone: 1994,
-      losetwo: 1494,
-    },
-    240: {
-      maintain: 2440,
-      losehalf: 2190,
-      loseone: 1940,
-      losetwo: 1440,
-    },
-    230: {
-      maintain: 2386,
-      losehalf: 2136,
-      loseone: 1886,
-      losetwo: 1386,
-    },
-    220: {
-      maintain: 2331,
-      losehalf: 2081,
-      loseone: 1831,
-      losetwo: 1331,
-    },
-    210: {
-      maintain: 2277,
-      losehalf: 2027,
-      loseone: 1777,
-      losetwo: 1277,
-    },
-    200: {
-      maintain: 2222,
-      losehalf: 1972,
-      loseone: 1722,
-      losetwo: 1222,
-    },
-    190: {
-      maintain: 2168,
-      losehalf: 1918,
-      loseone: 1668,
-      losetwo: 1168,
-    },
-    180: {
-      maintain: 2113,
-      losehalf: 1863,
-      loseone: 1613,
-      losetwo: 1113,
-    },
-  },
-};
 
 //! Page Contruction Functions
 async function createMainPage() {
@@ -175,6 +119,9 @@ async function createMainPage() {
         serverURL,
         allUserMeals
       );
+      document.getElementById("dailyCalories").innerText = 0;
+
+      updateCalories();
     }
 
     function nextDate() {
@@ -205,6 +152,9 @@ async function createMainPage() {
         serverURL,
         allUserMeals
       );
+      document.getElementById("dailyCalories").innerText = 0;
+
+      updateCalories();
     }
 
     function prevWeek() {
@@ -235,6 +185,9 @@ async function createMainPage() {
         serverURL,
         allUserMeals
       );
+      document.getElementById("dailyCalories").innerText = 0;
+
+      updateCalories();
     }
 
     function nextWeek() {
@@ -265,37 +218,103 @@ async function createMainPage() {
         serverURL,
         allUserMeals
       );
+      document.getElementById("dailyCalories").innerText = 0;
+
+      updateCalories();
     }
 
-    const dailyInfoLine = document.createElement('div')
-    dailyInfoLine.id = "dailyInfoLine"
+    const dailyInfoLine = document.createElement("div");
+    dailyInfoLine.id = "dailyInfoLine";
 
-    const calories = document.createElement('div')
-    const dailyCalories = document.createElement("span")
-    dailyCalories.name = "dailyCalories"
-    dailyCalories.id = "dailyCalories"
-    dailyCalories.innerText = "0"
+    const calories = document.createElement("div");
+    const dailyCalories = document.createElement("span");
+    dailyCalories.name = "dailyCalories";
+    dailyCalories.id = "dailyCalories";
+    dailyCalories.innerText = "0";
 
-    const dailyCaloriesLabel = document.createElement('span')
-    dailyCaloriesLabel.innerText = "Cals"
+    const dailyCaloriesLabel = document.createElement("span");
+    dailyCaloriesLabel.innerText = "Cals";
     // dailyCaloriesLabel.setAttribute("for", "dailyCalories")
 
-    const weight = document.createElement("div")
+    const weight = document.createElement("div");
 
-    const dailyWeight = document.createElement("span")
-    dailyWeight.name = "dailyWeight"
-    dailyWeight.id = "dailyWeight"
-    dailyWeight.innerText = "0"
+    const dailyWeight = document.createElement("span");
+    dailyWeight.name = "dailyWeight";
+    dailyWeight.id = "dailyWeight";
+    dailyWeight.innerText = "0";
 
-    const dailyWeightLabel = document.createElement("span")
-    dailyWeightLabel.innerText = "Weight"
+    const dailyWeightLabel = document.createElement("span");
+    dailyWeightLabel.innerText = "Weight";
     // dailyWeightLabel.setAttribute("for", "dailyWeight")
 
-    calories.append(dailyCaloriesLabel, dailyCalories)
-    weight.append(dailyWeightLabel, dailyWeight)
-    dailyInfoLine.append(calories, weight)
+    calories.append(dailyCaloriesLabel, dailyCalories);
+    weight.append(dailyWeightLabel, dailyWeight);
+    dailyInfoLine.append(calories, weight);
 
-    header.after(dailyInfoLine, prevNextSection);
+    // ----------------------------
+    const maxCaloriesLine = document.createElement("div");
+    maxCaloriesLine.id = "maxCaloriesLine";
+
+    const maintain = document.createElement("div");
+    const maintainCals = document.createElement("span");
+    maintainCals.name = "maintainCals";
+    maintainCals.id = "maintainCals";
+    maintainCals.innerText = "0";
+
+    const maintainCalsLabel = document.createElement("span");
+    maintainCalsLabel.innerText = "Maintain: ";
+
+    maintain.append(maintainCalsLabel, maintainCals);
+    // maintainCals.append()
+    // -------------
+
+    const loseOnePointFiveLbs = document.createElement("div");
+
+    const loseOnePointFiveLbsCals = document.createElement("span");
+    loseOnePointFiveLbsCals.name = "loseOnePointFiveLbsCals";
+    loseOnePointFiveLbsCals.id = "loseOnePointFiveLbsCals";
+    loseOnePointFiveLbsCals.innerText = "0";
+
+    const loseOnePointFiveLbsCalsLabel = document.createElement("span");
+    loseOnePointFiveLbsCalsLabel.innerText = "Lose 1.5: ";
+    loseOnePointFiveLbs.append(
+      loseOnePointFiveLbsCalsLabel,
+      loseOnePointFiveLbsCals
+    );
+    //-----------------
+    const loseOneLb = document.createElement("div");
+
+    const loseOneLbCals = document.createElement("span");
+    loseOneLbCals.name = "loseOneLbCals";
+    loseOneLbCals.id = "loseOneLbCals";
+    loseOneLbCals.innerText = "0";
+
+    const loseOneLbCalsLabel = document.createElement("span");
+    loseOneLbCalsLabel.innerText = "Lose 1: ";
+    loseOneLb.append(loseOneLbCalsLabel, loseOneLbCals);
+    //------------------
+
+    const losePointFiveLb = document.createElement("div");
+
+    const losePointFiveLbCals = document.createElement("span");
+    losePointFiveLbCals.name = "losePointFiveLbCals";
+    losePointFiveLbCals.id = "losePointFiveLbCals";
+    losePointFiveLbCals.innerText = "0";
+
+    const losePointFiveLbCalsLabel = document.createElement("span");
+    losePointFiveLbCalsLabel.innerText = "Lose .5: ";
+    losePointFiveLb.append(losePointFiveLbCalsLabel, losePointFiveLbCals);
+
+    //------------------
+
+    maxCaloriesLine.append(
+      maintain,
+      losePointFiveLb,
+      loseOneLb,
+      loseOnePointFiveLbs
+    );
+
+    header.after(dailyInfoLine, maxCaloriesLine, prevNextSection);
 
     createDataObject(
       sessionStorage.userID,
@@ -310,9 +329,22 @@ async function createMainPage() {
     // buildCardioWindow();
     // buildWorkoutWindow();
     buildMealsSection();
-    document.getElementById("mealsTitle").click()
+    document.getElementById("mealsTitle").click();
     // buildRoutinesWindow()
   }
+}
+
+function updateCalories() {
+  const mealCalories = document.getElementsByClassName("dailyMealCalories");
+
+  let total = 0;
+  for (let i = 0; i < mealCalories.length; i++) {
+    // console.log(mealCalories[i].textContent);
+    total += Number(mealCalories[i].textContent);
+  }
+  // console.log("total daily calories: ", total);
+  document.getElementById("dailyCalories").innerText = total;
+    calculateCalorieLimits();
 }
 
 //! Begin
