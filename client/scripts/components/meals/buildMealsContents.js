@@ -2,7 +2,6 @@ import { openMealsIngredientsInputDropdownSection } from "./openMealsIngredients
 import { findMealEntryByMealNameAndUserID } from "./crud_functions/findMealEntryByMealNameAndUserID.js";
 import { serverURL } from "../../../helpers/serverURL.js";
 import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
-import { buildMealsSection } from "./buildMealsSection.js";
 import { getDailyMealsEntries } from "../dailyMeals/crud_functions/getDailyMealsEntries.js";
 // import { buildDailyMealsSection } from "../dailyMeals/buildDailyMealsSection.js";
 import {createDailyMealsEntry} from "../dailyMeals/crud_functions/createDailyMealsEntry.js"

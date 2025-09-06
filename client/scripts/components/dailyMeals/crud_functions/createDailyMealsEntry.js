@@ -48,7 +48,6 @@ export async function createDailyMealsEntry(focusedDate, mealName, mealTime, cal
         console.log("no meal found, creating meal entry");
 
         createMealsEntry(mealName, calories, protein, sugars, serverURL);
-        // buildMealsSection();
 
         let allUserMeals = [];
         allUserMeals = await getAllUserMeals(serverURL, allUserMeals);

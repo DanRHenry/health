@@ -296,6 +296,12 @@ th {
   background-color: white;
 }
 
+.ingredientInputLabels {
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-evenly;
+}
+
 .ingredientInputLabels > span {
   display: inline-block;
   font-weight: bold;

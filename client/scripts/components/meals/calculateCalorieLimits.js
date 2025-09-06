@@ -81,23 +81,6 @@ export function calculateCalorieLimits() {
 
   const calorieLimitsRange = calorieLimits[height][Math.floor(weight * 0.1) * 10]
 
-
-  if (cals <= calorieLimitsRange.maintain) {
-    console.log("maintaining");
-    console.log (calorieLimitsRange.maintain)
-  }
-  if (cals <= calorieLimitsRange.losehalf) {
-    console.log("loseing half");
-  }
-  if (cals <= calorieLimitsRange.loseone) {
-    console.log("losing one");
-  }
-  if (cals <= calorieLimitsRange.loseonepointfive) {
-    console.log("losing loseonepointfive");
-  }
-  else {
-    console.log("hello?")
-  }
       maintainCals.innerText = calorieLimitsRange.maintain - cals
 
       losePointFiveLbCals.innerText = calorieLimitsRange.losehalf -cals
