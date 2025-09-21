@@ -1,8 +1,8 @@
 export async function findMealEntryByMealNameAndUserID(mealName, serverURL) {
   try{
-  const URL = `${serverURL}/meals/find/${sessionStorage.userID}/${mealName}`;
+  const URL = `${serverURL}/meals/find/${sessionStorage.userID}/${mealName.trim()}`;
 
-  // console.log(URL);
+  console.log(URL);
 
   const res = await fetch(URL, {
     method: "GET",

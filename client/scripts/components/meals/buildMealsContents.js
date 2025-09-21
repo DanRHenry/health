@@ -202,13 +202,15 @@ const info = await getDailyMealsEntries(focusedDate)
 
   async function handleMealsInputChange() {
     for (let i = 0; i < allUserMeals.length; i++) {
+          // console.log("allUserMeals[i]",allUserMeals[i])
+          // console.log(mealsNameInput.value)
       if (allUserMeals[i] === mealsNameInput.value) {
         // console.log("match");
         const mealData = await findMealEntryByMealNameAndUserID(
-          allUserMeals[i],
+          mealsNameInput.value,
           serverURL
         );
-        // console.log("mealData: ", mealData);
+        console.log("mealData: ", mealData);
         const mealInfo = mealData.getAllMeals;
 
         console.log(mealInfo)

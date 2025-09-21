@@ -140,7 +140,7 @@ export function openMealsIngredientsInputDropdownSection(
         noBtn.innerText = "No";
         yesBtn.addEventListener("click", () => {
           updateMealsEntry({
-            mealName: mealsNameInput,
+            mealName: mealsNameInput.trim(),
             mealTime: mealTimeInput,
             calories: caloriesInput,
             // protein: proteinInput,
