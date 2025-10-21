@@ -16,8 +16,11 @@ export async function updateMealsEntry(mealsUpdateObject) {
      }),
   });
   const data = await res.json();
+  if (data.message !=="Entry not found to update."){
   console.log(data);
+  
   document.getElementById("mealUpdateConfirmationLine").remove();
+  }
   } catch (err) {
     console.error(err)
   }

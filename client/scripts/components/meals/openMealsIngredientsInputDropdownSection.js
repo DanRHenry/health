@@ -155,10 +155,15 @@ export function openMealsIngredientsInputDropdownSection(
           updateConfirmationLine.remove();
         });
         updateConfirmationLine.append(yesBtn, noBtn);
+        console.log(caloriesInput)
+        console.log(allUserMeals[i].calories)
+        // if (caloriesInput !== allUserMeals[i].calories) {
         if (!document.getElementById("mealUpdateConfirmationLine")) {
-          mealsSection.append(updateConfirmationLine);
+
+            mealsSection.append(updateConfirmationLine);
+          }
           // yesBtn.focus()
-        }
+        // }
         return;
       }
     }

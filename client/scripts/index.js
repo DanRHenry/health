@@ -19,6 +19,7 @@ import { createDataObject } from "./components/createDataObject.js";
 import { getWeightEntry } from "./components/weight/crud_functions/getWeightEntry.js";
 
 import { updateWeightEntry } from "./components/weight/crud_functions/updateWeightEntry.js";
+import { fixmealstrailingspaces } from "./components/meals/crud_functions/fixmealstrailingspaces.js";
 
 //! ----------- Global Variables ---------------
 
@@ -374,8 +375,18 @@ async function createMainPage() {
     // buildRoutinesWindow()
   }
   calculateCalorieLimits();
-}
+/* 
 
+Uncomment to reenable fix trailing spaces button to fix bug of names appearing twice and calorie information not populating
+
+  const fixmealstrailingspacesbtn = document.createElement("button")
+  fixmealstrailingspacesbtn.id = "fixmealstrailingspacesbtn"
+  fixmealstrailingspacesbtn.innerText = "fix trailing spaces"
+  fixmealstrailingspacesbtn.addEventListener("click", fixmealstrailingspaces)
+
+  document.getElementById("mealsTitle").before(fixmealstrailingspacesbtn)
+}
+ */
 function updateCalories() {
   const mealCalories = document.getElementsByClassName("dailyMealCalories");
 

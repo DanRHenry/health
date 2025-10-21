@@ -214,6 +214,7 @@ const info = await getDailyMealsEntries(focusedDate)
         const mealInfo = mealData.getAllMeals;
 
         console.log(mealInfo)
+          
         if (!document.getElementById("mealsIngredientsSection")) {
           console.log("focusedDateOutput: ",focusedDate)
           openMealsIngredientsInputDropdownSection(
@@ -223,6 +224,8 @@ const info = await getDailyMealsEntries(focusedDate)
           );
         }
         // console.log(mealInfo)
+                if (mealInfo) {
+
         console.log(mealInfo.calories)
         // console.log(mealInfo.mealTime)
 
@@ -233,6 +236,8 @@ const info = await getDailyMealsEntries(focusedDate)
          caloriesInput.value = mealInfo.calories;
         // document.getElementById("proteinInput").value = mealInfo.protein;
         // document.getElementById("sugarsInput").value = mealInfo.sugars;
+
+        }
       }
     }
     const dailyMeals = await getDailyMealsEntries(focusedDate)
