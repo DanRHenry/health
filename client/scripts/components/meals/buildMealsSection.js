@@ -18,7 +18,7 @@ export function buildMealsSection() {
 
   mealsSectionTop.append(mealsTitle);
 
-  prevNextSection.after(mealsSectionTop);
+  document.getElementById("prevNextSection").after(mealsSectionTop);
   mealsSectionTop.after(mealsSection);
 
   // buildDailyMealsSection()

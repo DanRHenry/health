@@ -11,6 +11,7 @@ export async function buildMealsContents(
   allUserMeals,
   focusedDate
 ) {
+  let mealData;
       allUserMeals = await getAllUserMeals(serverURL, allUserMeals);
       // console.log("buildingMealsContents...")
       // console.log("allUserMeals: ",allUserMeals)
@@ -65,7 +66,9 @@ export async function buildMealsContents(
   const mealsNameInputDropdown = document.createElement("datalist");
   mealsNameInputDropdown.id = "mealsNameInputDropdown";
 
+  // console.log(allUserMeals)
   for (let i = 0; i < allUserMeals.length; i++) {
+    // console.log("allUserMeals[i]",allUserMeals[i])
     const mealsNameInputDropdownListItem = document.createElement("option");
     mealsNameInputDropdownListItem.value = allUserMeals[i];
     mealsNameInputDropdownListItem.innerText = allUserMeals[i];
@@ -206,12 +209,12 @@ const info = await getDailyMealsEntries(focusedDate)
           // console.log(mealsNameInput.value)
       if (allUserMeals[i] === mealsNameInput.value) {
         // console.log("match");
-        const mealData = await findMealEntryByMealNameAndUserID(
+        mealData = await findMealEntryByMealNameAndUserID(
           mealsNameInput.value,
           serverURL
         );
         console.log("mealData: ", mealData);
-        const mealInfo = mealData.getAllMeals;
+        const mealInfo = mealData.getMealsByNameAndUserID;
 
         console.log(mealInfo)
           

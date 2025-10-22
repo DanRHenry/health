@@ -35,7 +35,7 @@ export async function createDailyMealsEntry(focusedDate, mealName, mealTime, cal
 
     const data = await res.json();
     if (data.message != "No Records Found.") {
-      fillDailyMealsContent(focusedDate);
+      fillDailyMealsContent("meals","allmeals",focusedDate);
     }
     
     if (data.message === "Success! New DailyMeals Entry Created!") {

@@ -1,10 +1,12 @@
 import { closeMealsIngredientsInputDropdownSection } from "./closeMealsIngredientsInputDropdownSection.js";
-import { createMealsEntry } from "../meals/crud_functions/createMealsEntry.js"
+import { createMealsEntry } from "../meals/crud_functions/createMealsEntry.js";
 import { buildDailyMealsSection } from "../dailyMeals/buildDailyMealsSection.js";
 import { getAllUserMeals } from "./crud_functions/getAllUserMeals.js";
 import { createDataObject } from "../createDataObject.js";
-import {updateMealsEntry} from "../meals/crud_functions/updateMealsEntry.js";
-import { createDailyMealsEntry} from "../dailyMeals/crud_functions/createDailyMealsEntry.js"
+import { updateMealsEntry } from "../meals/crud_functions/updateMealsEntry.js";
+import { createDailyMealsEntry } from "../dailyMeals/crud_functions/createDailyMealsEntry.js";
+import { findMealEntryByMealNameAndUserID } from "./crud_functions/findMealEntryByMealNameAndUserID.js";
+import { serverURL } from "../../../helpers/serverURL.js";
 
 export function openMealsIngredientsInputDropdownSection(
   // handleMealsInputClick,
@@ -38,19 +40,19 @@ export function openMealsIngredientsInputDropdownSection(
   mealTimeInput.addEventListener("keydown", handleMealsInputClick);
   mealTimeInput.id = "mealTimeInput";
   mealTimeInput.name = "mealTimeInput";
-  mealTimeInput.setAttribute("list", "meal-time-choices")
+  mealTimeInput.setAttribute("list", "meal-time-choices");
   // mealTimeInput.list = "meal-time-choices";
   mealTimeInput.id = "meal-time-choice";
-  mealTimeInput.autocomplete = "off"
+  mealTimeInput.autocomplete = "off";
 
   mealTimeInput.addEventListener("click", () => {
-        if (mealTimeInput.value !== "") {
+    if (mealTimeInput.value !== "") {
       mealTimeInput.value = "";
       mealTimeInput.blur();
       mealTimeInput.focus();
       // mealTimeInput.click()
     }
-  })
+  });
 
   const mealTimeOptions = document.createElement("datalist");
   mealTimeOptions.id = "meal-time-choices";
@@ -63,9 +65,14 @@ export function openMealsIngredientsInputDropdownSection(
   const snackOption = document.createElement("option");
   snackOption.value = "Snack";
 
-  mealTimeOptions.append(breakfastOption, lunchOption, dinnerOption, snackOption)
+  mealTimeOptions.append(
+    breakfastOption,
+    lunchOption,
+    dinnerOption,
+    snackOption
+  );
 
-  mealTimeInput.appendChild(mealTimeOptions)
+  mealTimeInput.appendChild(mealTimeOptions);
 
   mealTimeRow.append(mealTimeLabel, mealTimeInput);
 
@@ -99,7 +106,7 @@ export function openMealsIngredientsInputDropdownSection(
 
   mealsIngredientsSection.append(
     mealTimeRow,
-    caloriesRow,
+    caloriesRow
     // proteinRow,
     // sugarsRow
   );
@@ -108,7 +115,7 @@ export function openMealsIngredientsInputDropdownSection(
 
   mealsTable.after(mealsIngredientsSection);
 
-    async function handleMealsInputClick(e) {
+  async function handleMealsInputClick(e) {
     if (e.key !== "Enter") {
       return;
     }
@@ -116,9 +123,14 @@ export function openMealsIngredientsInputDropdownSection(
     const mealsNameInput = document.getElementById("mealsNameInput").value;
 
     const caloriesInput = document.getElementById("caloriesInput").value;
-  
-    createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
-    
+
+    createDailyMealsEntry(
+      focusedDate,
+      mealsNameInput,
+      mealTimeInput.value,
+      caloriesInput
+    );
+
     // const proteinInput = document.getElementById("proteinInput")?.value;
 
     // const sugarsInput = document.getElementById("sugarsInput")?.value;
@@ -129,6 +141,13 @@ export function openMealsIngredientsInputDropdownSection(
     // console.log(mealsNameInput)
     for (let i = 0; i < allUserMeals.length; i++) {
       if (allUserMeals[i] === mealsNameInput) {
+        const existingMealEntry = await findMealEntryByMealNameAndUserID(
+          allUserMeals[i],
+          serverURL
+        );
+        const existingMealCalories =
+          existingMealEntry.getMealsByNameAndUserID.calories;
+
         console.log("match");
         const updateConfirmationLine = document.createElement("div");
         updateConfirmationLine.id = "mealUpdateConfirmationLine";
@@ -150,29 +169,32 @@ export function openMealsIngredientsInputDropdownSection(
           });
         });
         noBtn.addEventListener("click", () => {
-          console.log("adding meal to today's meals")
+          console.log("adding meal to today's meals");
           // createDailyMealsEntry(focusedDate, mealsNameInput, mealTimeInput.value, caloriesInput)
-          updateConfirmationLine.remove();
+          document.getElementById("mealUpdateConfirmationLine").remove();
         });
         updateConfirmationLine.append(yesBtn, noBtn);
-        console.log(caloriesInput)
-        console.log(allUserMeals[i].calories)
+        console.log("caloriesInput: ", caloriesInput);
+        console.log("calories: ", existingMealCalories);
         // if (caloriesInput !== allUserMeals[i].calories) {
         if (!document.getElementById("mealUpdateConfirmationLine")) {
-
+          if (+caloriesInput !== +existingMealCalories) {
             mealsSection.append(updateConfirmationLine);
           }
-          // yesBtn.focus()
+        }
+        // yesBtn.focus()
         // }
+        mealTimeInput.value = "";
+        document.getElementById("caloriesInput").value = "";
         return;
       }
     }
 
     // if (mealsNameInput && caloriesInput && proteinInput && sugarsInput) {
-        if (mealsNameInput && caloriesInput) {
+    if (mealsNameInput && caloriesInput) {
       await createMealsEntry(
         mealsNameInput,
-        caloriesInput,
+        caloriesInput
         // proteinInput,
         // sugarsInput
       );

@@ -1,10 +1,12 @@
 import { serverURL } from "../../../helpers/serverURL.js";
+import { buildMealsSection } from "../meals/buildMealsSection.js";
+import { buildMealsContents } from "../meals/buildMealsContents.js";
 import { calculateCalorieLimits } from "../meals/calculateCalorieLimits.js";
 import { deleteDailyMealsEntry } from "./crud_functions/deleteDailyMealsEntry.js";
 import { getDailyMealsEntries } from "./crud_functions/getDailyMealsEntries.js";
 
 
-export async function fillDailyMealsContent(focusedDate) {
+export async function fillDailyMealsContent(meals, allUserMeals, focusedDate) {
   try { 
 
   const data = await getDailyMealsEntries(focusedDate);
@@ -56,7 +58,13 @@ export async function fillDailyMealsContent(focusedDate) {
       if (confirmDelete) {
         deleteDailyMealsEntry(meal._id);
         console.log("deleted... filling daily meals");
-        fillDailyMealsContent(focusedDate);
+        // location.reload()
+        // document.getElementById("mealsSection").remove()
+        // document.getElementById("mealsSectionTop").remove()
+        // buildMealsSection()
+        // buildMealsContents(meals, allUserMeals, focusedDate)
+        // fillDailyMealsContent(focusedDate);
+        location.reload()
       }
     });
   })

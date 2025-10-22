@@ -19,5 +19,5 @@ export async function fillMenuContents(serverURL, object, focusedDate, allUserMe
   //! DailyMeals
   // buildDailyMealsSection(focusedDate)
 
-  await fillDailyMealsContent(focusedDate)
+  await fillDailyMealsContent(object.meals, allUserMeals, focusedDate)
 }

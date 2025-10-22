@@ -15,8 +15,10 @@ export async function getAllUserMeals() {
   );
 
   const data = await res.json();
+  console.log("mealdata: ",data)
   for (let i = 0; i < data.mealNames.length; i++) {
     allUserMeals.push(data.mealNames[i]);
+    // allUserMeals.push(data)
   }
   return allUserMeals;
   } catch (err) {

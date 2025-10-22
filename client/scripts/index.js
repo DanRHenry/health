@@ -385,8 +385,8 @@ Uncomment to reenable fix trailing spaces button to fix bug of names appearing t
   fixmealstrailingspacesbtn.addEventListener("click", fixmealstrailingspaces)
 
   document.getElementById("mealsTitle").before(fixmealstrailingspacesbtn)
+  */
 }
- */
 function updateCalories() {
   const mealCalories = document.getElementsByClassName("dailyMealCalories");
 
