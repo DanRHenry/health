@@ -4,11 +4,6 @@ const MealsSchema = new mongoose.Schema({
     mealName: {
         type: String,
         required: true,
-        unique: true
-    },
-    mealTime: {
-        type: String,
-        required: true
     },
     calories: {
         type: Number,
@@ -26,10 +21,6 @@ const MealsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: {
-        type: String,
-        required: true
-    }
 })
 
 module.exports = mongoose.model("Meals", MealsSchema);

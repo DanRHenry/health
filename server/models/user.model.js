@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: false,
-        unique: true
+        // unique: true
     },
     family: {
         type: String,
@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         required: false
     },
     weight: {
-        type: Array,
+        type: Number,
         required: false
     },
     age: {

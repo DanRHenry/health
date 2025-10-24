@@ -10,7 +10,7 @@ const cardioController = require("./controllers/cardio.controller")
 const workoutController = require("./controllers/workout.controller")
 const mealsController = require("./controllers/meals.controller")
 const dailyMealsController = require("./controllers/dailyMeals.controller")
-
+const weightController = require("./controllers/weight.controller")
 //middleware
 
 const requireValidation = require("./middleware/validate-session")
@@ -30,13 +30,15 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/health/user",userController)
-
 app.use(requireValidation);
 
 app.use("/api/health/cardio", cardioController)
 app.use("/api/health/workout", workoutController)
 app.use("/api/health/meals", mealsController)
-app.use("/api/health/dailyMeals", dailyMealsController)
+app.use("/api/health/weight", weightController)
+
+// unused
+app.use("/api/health/dailymeals", dailyMealsController)
 
 app.listen(PORT, () => {
     console.log(`The health app server is running on port: ${PORT}`)

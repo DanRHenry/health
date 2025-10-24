@@ -40,6 +40,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+// used but inactive
 //!Find a Cardio Entry
 router.get("/findone:id", async (req, res) => {
   try {

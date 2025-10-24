@@ -9,10 +9,43 @@ body {
   }
 }
 
+#dailyInfoLine {
+  display: flex;
+  justify-content: space-evenly;
+  /* flex-direction: column; */
+}
+
+#dailyInfoLine > div > span {
+  margin: 1rem;
+}
+
+#maxCaloriesLine {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 #prevNextSection {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+}
+
+#maxCaloriesLine > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mealsHeaders {
+  padding-top: 10px;
+}
+
+.mealsHeaders:first-child{
+  visibility: hidden;
+}
+
+.mealsHeaders:last-child{
+  visibility: hidden;
 }
 
 #prevNextSection > button,
@@ -72,7 +105,7 @@ body {
   height: 0;
   min-height: 0;
   /* background-color: rgb(114, 114, 255); */
-  overflow: hidden;
+  /* overflow: hidden; */
   transition: min-height 0.25s ease;}
 
 #cardioSection > table, #mealsSection > table {
@@ -237,8 +270,13 @@ display: flex;
 }
 
 #mealsSection > table > tr > td > *, #mealsSection > table > tr > th > *{
-  width: 90%;
+  /* width: 90%; */
   max-width: 90%;
+}
+
+#mealsSection > table > tr > * {
+  width: calc(100vw /3);
+  text-align: center;  
 }
 
 th {
@@ -258,6 +296,12 @@ th {
   background-color: white;
 }
 
+.ingredientInputLabels {
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-evenly;
+}
+
 .ingredientInputLabels > span {
   display: inline-block;
   font-weight: bold;
@@ -275,6 +319,14 @@ th {
   text-shadow: 1px 1px black;
   padding-bottom: 1em;
   padding-top: 1em;
+  min-height: fit-content;
+  /* height: 100vh; */
   /* border-bottom-right-radius: .5em; */
   /* border-bottom-left-radius: .5em; */
+}
+
+#dailyMealsSection{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-evenly;
 }

@@ -8,47 +8,36 @@ const serverError = (res, error) => {
   });
 };
 
+// used
 //!Create DailyMeals Entry
 router.post("/create", async (req, res) => {
-  const { mealTime, calories, protein, sugars, date, userID, mealName } =
-    req.body;
-
+  
   try {
-    console.log(req.body);
-    const meals = new DailyMeals({
+    const { mealTime, calories, protein, sugars, date, userID, mealName } =
+      req.body;
+
+    let dailyMeal = new DailyMeals({
       mealName: mealName,
       mealTime: mealTime,
       calories: calories,
-      protein: protein,
-      sugars: sugars,
+      // protein: protein,
+      // sugars: sugars,
       date: date,
       userID: userID,
     });
 
-    const checkForExistingMealsEntry = await DailyMeals.findOne(
-      {
-        mealName: mealName,
-        userID: userID
-      }
-    );
-
-    if (checkForExistingMealsEntry) {
-      res.status(200).json({
-        message: "DailyMeals Entry Already There",
-      });
-    } else {
-      const newMeals = await meals.save();
+      const newDailyMeal = await dailyMeal.save()
 
       res.status(200).json({
-        newMeals: newMeals,
+        newDailyMeal: newDailyMeal,
         message: "Success! New DailyMeals Entry Created!",
       });
-    }
   } catch (err) {
     serverError(res, err);
   }
 });
 
+// used
 //!Find all meals for a user
 router.get("/findbyuser:userID", async (req, res)=> {
   try {
@@ -74,6 +63,7 @@ router.get("/findbyuser:userID", async (req, res)=> {
   }
 })
 
+// used
 //!Find a DailyMeals Entry
 router.get("/findone:id", async (req, res) => {
   try {
@@ -96,18 +86,20 @@ router.get("/findone:id", async (req, res) => {
   }
 });
 
-//!Find DailyMeals Entries by date
-router.get("/find:userID/:date", async (req, res) => {
+//!Find  DailyMeals Entries by date trial...
+router.get("/findbyuseranddate/:userID/:date", async (req, res) => {
   try {
+    // console.log("findbyuseranddate...")
     const { userID, date } = req.params;
-    const getMealsRecords = await DailyMeals.find({
+    // console.log("dailyMealsInfo: ", userID, date)
+    const getDailyMealsRecords = await DailyMeals.find({
       date: date,
       userID: userID,
     });
-    getMealsRecords.length > 0
+    getDailyMealsRecords.length > 0
       ? res.status(200).json({
           message: "Found!",
-          getMealsRecords,
+          getDailyMealsRecords,
         })
       : res.status(404).json({
           message: "No Records Found.",
@@ -117,6 +109,30 @@ router.get("/find:userID/:date", async (req, res) => {
   }
 });
 
+// used
+//!Find DailyMeals Entries by date
+// router.get("/findbyuseranddate:userID/:date", async (req, res) => {
+//   try {
+//     const { userID, date } = req.params;
+//     console.log("dailyMealsInfo: ", userID, date)
+//     const getDailyMealsRecords = await DailyMeals.find({
+//       date: date,
+//       userID: userID,
+//     });
+//     getDailyMealsRecords.length > 0
+//       ? res.status(200).json({
+//           message: "Found!",
+//           getDailyMealsRecords,
+//         })
+//       : res.status(404).json({
+//           message: "No Records Found.",
+//         });
+//   } catch (err) {
+//     serverError(res, err);
+//   }
+// });
+
+// used
 //!Update DailyMeals Entry without an ID
 router.patch("/update", async (req, res) => {
   try {
@@ -157,47 +173,14 @@ router.patch("/update", async (req, res) => {
   }
 });
 
-
-//!Update DailyMeals Entry by ID //todo finish
-// router.patch("/update:mealsEntryID", async (req, res) => {
-//   try {
-//     const { mealsEntryID } = req.params;
-//     const record = await DailyMeals.findOne({ _id: mealsEntryID });
-//     const { updateInfo } = req.body;
-
-//     if (!record) {
-//       res.status(404).json({
-//         message: "Entry not found to update.",
-//       });
-//     }
-
-//     // This makes sure the information has been updated before returning
-//     const returnOption = { new: true };
-
-//     const updateMealsRecord = await DailyMeals.findOneAndUpdate(
-//       { _id: mealsEntryID },
-//       JSON.parse(updateInfo),
-//       returnOption
-//     );
-
-//     updateMealsRecord
-//       ? res.status(200).json({
-//           message: "DailyMeals entry has been updated successfully.",
-//           updateMealsRecord,
-//         })
-//       : res.status(520).json({
-//           message: "Unable to update the meals entry. Try again later.",
-//         });
-//   } catch (err) {
-//     serverError(err);
-//   }
-// });
-
+// used
 //!Delete a DailyMeals Entry
+
 router.delete("/delete:mealsID", async (req, res) => {
+  console.log('deleting here...')
   try {
     const { mealsID } = req.params;
-    // console.log(mealsID)
+    console.log(mealsID)
 
     const deleteMealsItem = await DailyMeals.deleteOne({
       _id: mealsID,
@@ -215,6 +198,7 @@ router.delete("/delete:mealsID", async (req, res) => {
   }
 });
 
+// used
 //!Find meal by name and user id
 router.get("/find/:id/:mealName", async (req, res) => {
   try {
@@ -239,6 +223,7 @@ router.get("/find/:id/:mealName", async (req, res) => {
   }
 });
 
+// used
 //!Find all saved date by userID
 router.get("/findmealbydateandid/:id/:date", async (req, res) => {
   try {

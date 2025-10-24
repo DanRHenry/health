@@ -4,7 +4,6 @@ const DailyMealsSchema = new mongoose.Schema({
     mealName: {
         type: String,
         required: true,
-        unique: true
     },
     mealTime: {
         type: String,
@@ -29,7 +28,11 @@ const DailyMealsSchema = new mongoose.Schema({
     date: {
         type: String,
         required: true
-    }
+    },
+    // index: {
+    //     type: Number,
+    //     required: true
+    // }
 })
 
 module.exports = mongoose.model("DailyMeals", DailyMealsSchema);

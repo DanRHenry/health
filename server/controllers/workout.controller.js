@@ -8,7 +8,7 @@ const serverError = (res, error) => {
   });
 };
 
-
+// used
 //!Create Workout Entry
 router.post("/create", async (req, res) => {
   const { exerciseName, exerciseType, duration, machine, dateCreated, userID } = req.body;
@@ -42,6 +42,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
+// used but not active
 //!Find a Workout Entry
 router.get("/findone:id", async (req, res) => {
   try {
@@ -64,6 +65,7 @@ router.get("/findone:id", async (req, res) => {
   }
 });
 
+// used
 //!Find Workout Entries by date
 router.get("/find:userID/:date", async (req, res) => {
   try {
@@ -86,6 +88,7 @@ router.get("/find:userID/:date", async (req, res) => {
   }
 });
 
+// used but not active
 //!Update Workout Entry by ID //todo finish
 router.patch("/update:workoutEntryID", async (req, res) => {
   try{
@@ -119,6 +122,7 @@ router.patch("/update:workoutEntryID", async (req, res) => {
   }
 })
 
+// used
 //!Delete a Workout Entry
 router.delete("/delete:workoutID", async (req,res) => {
   try {
