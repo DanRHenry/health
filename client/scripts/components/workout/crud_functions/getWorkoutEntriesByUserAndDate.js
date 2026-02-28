@@ -16,11 +16,11 @@ export async function getWorkoutEntriesByUserAndDate(userID, date) {
 
   if (data.message != "No Records Found.") {
     // console.log("Workout Records: ",data);
-  } 
-  // else {
-  //   console.log("Is there any Workout data?", data.message);
-  // }
-  return data;
+    // else {
+      //   console.log("Is there any Workout data?", data.message);
+      // }
+    } 
+      return data;
   } catch (err) {
     console.error(err)
   }
