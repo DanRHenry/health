@@ -1,4 +1,17 @@
 export async function handleSubmitSignUp(e) {
+    e.preventDefault()
+  
+const userEmailField = document.getElementById("userEmailField");
+const userPasswordField = document.getElementById("userPasswordField");
+
+const email = userEmailField.value
+const password = userPasswordField.value
+
+if (!email || !password) return
+else {
+console.log(userEmailField.value)
+console.log(userPasswordField.value)
+// console.log("signing up")
   e.preventDefault();
 
   console.log("signing up");
@@ -27,13 +40,8 @@ export async function handleSubmitSignUp(e) {
     sessionStorage.setItem("token", data.token);
     createMainPage();
   }
-  //   if (data.message === "User not found.") {
-  //     loginForm.removeEventListener("submit",handleSubmitLogin)
-  //     loginForm.addEventListener("submit", handleSubmitSignUp)
-  //   } else {
-  //     createMainPage();
-  //   }
   }catch (err) {
     console.error(err)
+  }
   }
 }

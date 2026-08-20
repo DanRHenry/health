@@ -8,5 +8,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
     "nodemon": "^3.1.10"
+  },
+  
+    "scripts": {
+      "start": "nodemon health.js"
+    
   }
 }

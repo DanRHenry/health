@@ -1,11 +1,16 @@
 const body = document.getElementById("body");
-const userEmailField = document.getElementById("userEmailField");
-const userPasswordField = document.getElementById("userPasswordField");
 const loginForm = document.getElementById("loginForm");
-
+const signupForm = document.getElementById("signupForm")
+const signupSection = document.getElementById("signupSection")
+const loginSection = document.getElementById("loginSection") 
 import { serverURL } from "../helpers/serverURL.js";
+
 import { handleSubmitLogin } from "./components/users/handleSubmitLogin.js";
+
+import { handleSubmitSignUp } from "./components/users/handleSubmitSignUp.js";
+
 import { getAllUserMeals } from "./components/meals/crud_functions/getAllUserMeals.js";
+
 import { calculateCalorieLimits } from "./components/meals/calculateCalorieLimits.js";
 
 import { buildCardioWindow } from "./components/cardio/buildCardioWindow.js";
@@ -19,6 +24,7 @@ import { createDataObject } from "./components/createDataObject.js";
 import { getWeightEntry } from "./components/weight/crud_functions/getWeightEntry.js";
 
 import { updateWeightEntry } from "./components/weight/crud_functions/updateWeightEntry.js";
+
 import { fixmealstrailingspaces } from "./components/meals/crud_functions/fixmealstrailingspaces.js";
 
 //! ----------- Global Variables ---------------
@@ -66,6 +72,17 @@ async function createMainPage() {
     navbar.id = "navbar";
 
     body.append(navbar);
+
+    const logoutBtn = document.createElement("button")
+    logoutBtn.innerText = "Log Out"
+    logoutBtn.addEventListener("click", handleLogout)
+
+    function handleLogout() {
+      sessionStorage.clear()
+      window.location.reload()
+    }
+
+    navbar.before(logoutBtn)
 
     const header = document.createElement("h2");
     header.id = "header";
@@ -387,6 +404,7 @@ Uncomment to reenable fix trailing spaces button to fix bug of names appearing t
   document.getElementById("mealsTitle").before(fixmealstrailingspacesbtn)
   */
 }
+
 function updateCalories() {
   const mealCalories = document.getElementsByClassName("dailyMealCalories");
 
@@ -521,4 +539,23 @@ loginForm.addEventListener("submit", (e) => {
   handleSubmitLogin(serverURL, createMainPage);
 });
 
-createMainPage();
+signupForm.addEventListener("submit", () => {
+  handleSubmitSignUp(serverURL, createMainPage)
+})
+
+const signUpBtn = document.getElementById("signUpBtn")
+signUpBtn.addEventListener("click", createSignUpScreen)
+
+function createSignUpScreen(){
+  if (signupSection.style.display === "none") {
+    loginSection.style.display = "none"
+    signupSection.style.display = "initial"
+  } else {
+    loginSection.style.display = "initial"
+    signupSection.style.display = "none"
+  }
+}
+
+if (sessionStorage.token) {
+  createMainPage();
+}

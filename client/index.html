@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,16 +8,47 @@
   </head>
 
   <body id="body">
-    <form id="loginForm">
-      <label for="userEmailField">Email:</label>
-      <input type="text" id="userEmailField" name="userEmailField" autocomplete="email"/>
-      <label for="userPasswordField">Password:</label>
-      <input type="password" id="userPasswordField" name="userPasswordField" 
-      autocomplete="current-password"
-      />
-      <input id="submitBtn" type="submit" value="Submit" />
+    <div id="loginSection">
+      <div>Log In</div>
+      <form id="loginForm" name="loginForm">
+        <label for="userEmailField">Email:</label>
+        <input
+          type="text"
+          id="userEmailField"
+          name="userEmailField"
+          autocomplete="email"
+        />
+        <label for="userPasswordField">Password:</label>
+        <input
+          type="password"
+          id="userPasswordField"
+          name="userPasswordField"
+          autocomplete="current-password"
+        />
+        <input id="submitBtn" type="submit" value="Submit" />
       </form>
-
+    </div>
+    <div id="signupSection" style="display: none">
+      <label>Sign Up</label>
+      <form id="signupForm" name="signupForm">
+        <label for="userEmailField">Email:</label>
+        <input
+          type="text"
+          id="userEmailField"
+          name="userEmailField"
+          autocomplete="email"
+        />
+        <label for="userPasswordField">Password:</label>
+        <input
+          type="password"
+          id="userPasswordField"
+          name="userPasswordField"
+          autocomplete="current-password"
+        />
+        <input id="submitBtn" type="submit" value="Submit" />
+      </form>
+    </div>
+    <button id="signUpBtn">Sign Up</button>
 
     <script src="./scripts/index.js" type="module"></script>
   </body>
