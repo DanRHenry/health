@@ -45,11 +45,10 @@ router.post("/signup", async (req, res) => {
 */
 
 router.post("/login", async (req, res) => {
-  console.log("logging in...")
   try {
 
     const { email, password } = req.body;
-
+	console.log("logging in: ",email)
     const user = await User.findOne({ email: email });
 
     if (!user) throw new Error("User not found.");
@@ -68,18 +67,13 @@ router.post("/login", async (req, res) => {
       token,
     });
   } catch (err) {
-    console.log("err res.message: ", res.message);
-    console.log("err: ", err);
     serverError(res, err);
   }
 });
 
-/* 
------------------------------ Find User Endpoint ------------------------
-*/
-
 router.get("/find", requireValidation, async (req, res) => {
   try {
+console.log("find endpoint reached")
     const id = req.user._id;
 
     const findUser = await User.findOne({ _id: id });

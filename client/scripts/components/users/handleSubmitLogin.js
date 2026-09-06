@@ -5,6 +5,7 @@ export async function handleSubmitLogin(serverURL, createMainPage) {
   const userPasswordField = document.getElementById("userPasswordField");
 
   try {
+//"https://danhenrydev.com/api/health"
     const URL = `${serverURL}/user/login`;
 
     console.log(URL);
@@ -13,6 +14,8 @@ export async function handleSubmitLogin(serverURL, createMainPage) {
       password: userPasswordField.value,
     });
 
+console.log("fetching URL: ", URL)
+console.log("body: ", body)
     const res = await fetch(URL, {
       method: "POST",
       mode: "cors",
@@ -24,7 +27,7 @@ export async function handleSubmitLogin(serverURL, createMainPage) {
 
     const data = await res.json();
 
-    console.log(data);
+    console.log('data response: ', data);
     if (data.message === "User not found." || data.token === undefined) {
       loginForm.removeEventListener("submit", handleSubmitLogin);
       loginForm.addEventListener("submit", handleSubmitSignUp);

@@ -11,11 +11,14 @@ const workoutController = require("./controllers/workout.controller")
 const mealsController = require("./controllers/meals.controller")
 const dailyMealsController = require("./controllers/dailyMeals.controller")
 const weightController = require("./controllers/weight.controller")
+
 //middleware
 
 const requireValidation = require("./middleware/validate-session")
 
 const cors = require("cors")
+app.use(cors());
+
 const mongoose = require("mongoose")
 const MONGO = process.env.MONGODB;
 
@@ -27,18 +30,16 @@ const db = mongoose.connection;
 db.once("open", () => console.log(`Connected: ${MONGO}`));
 
 app.use(express.json());
-app.use(cors());
 
-app.use("/api/health/user",userController)
+app.use("/user", userController)
+
+
 app.use(requireValidation);
 
-app.use("/api/health/cardio", cardioController)
-app.use("/api/health/workout", workoutController)
-app.use("/api/health/meals", mealsController)
-app.use("/api/health/weight", weightController)
-
-// unused
-app.use("/api/health/dailymeals", dailyMealsController)
+app.use("/cardio", cardioController)
+app.use("/workout", workoutController)
+app.use("/meals", mealsController)
+app.use("/weight", weightController)
 
 app.listen(PORT, () => {
     console.log(`The health app server is running on port: ${PORT}`)
